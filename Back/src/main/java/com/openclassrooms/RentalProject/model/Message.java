@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -21,9 +22,11 @@ public class Message {
 	@Column(name = "id")
 	private int id;
 	
+	@OneToOne
 	@JoinColumn(name="rental_id")
 	private Rental rental;
 	
+	@OneToOne
 	@JoinColumn(name="user_id")
 	private User author;
 	
