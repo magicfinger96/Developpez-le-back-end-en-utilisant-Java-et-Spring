@@ -23,7 +23,7 @@ public class UserController {
     * @param ID of the user
     * @return - A User
     */
-    @GetMapping("/api/user/{id}")
+    @GetMapping("/user/{id}")
     public User getUser(@PathVariable("id") final Integer id) {
         Optional<User> user = userService.getUserById(id);
         if(user.isEmpty()) {

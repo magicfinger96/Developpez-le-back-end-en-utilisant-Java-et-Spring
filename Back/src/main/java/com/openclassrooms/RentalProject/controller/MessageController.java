@@ -19,7 +19,7 @@ public class MessageController {
 	 * @param message An object Message
 	 * @return The Message object saved
 	 */
-	@PostMapping("/api/message")
+	@PostMapping("/message")
 	public Message createEmployee(@RequestBody Message message) {
 		return messageService.saveMessage(message);
 	}

@@ -18,19 +18,19 @@ public class AuthenticationController {
 		this.jwtService = jwtService;
 	}
 	
-	@PostMapping("/api/auth/login")
+	@PostMapping("/auth/login")
 	public String login(Authentication authentication) {
 		String token = jwtService.generateToken(authentication);
 		return token;
 	}
 	
-	@PostMapping("/api/auth/register")
-	public String register(Authentication authentication) {
+	@PostMapping("/auth/register")
+	public String register() {
 		String token = jwtService.generateToken(authentication);
 		return token;
 	}
 	
-	@GetMapping("/api/auth/me")
+	@GetMapping("/auth/me")
 	public User getMe() {
 		return null;
 	}
