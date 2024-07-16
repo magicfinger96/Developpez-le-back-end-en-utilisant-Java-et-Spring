@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,8 +40,9 @@ public class SpringSecurityConfig {
 				.authorizeHttpRequests(auth -> 
 				//	auth.requestMatchers("/api/auth/**").permitAll()
 				    auth.anyRequest().permitAll())
+				.httpBasic(c -> c.authenticationEntryPoint(
+				         (request, response, authException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase())))
 				.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-				.httpBasic(Customizer.withDefaults())
 				.build();
 	}
 	
