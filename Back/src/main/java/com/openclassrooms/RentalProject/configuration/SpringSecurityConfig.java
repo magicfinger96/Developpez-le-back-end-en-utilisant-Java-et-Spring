@@ -35,10 +35,12 @@ public class SpringSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable())
-				//.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> 
-				//	auth.requestMatchers("/api/auth/**").permitAll()
-				    auth.anyRequest().permitAll())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> {
+					auth.requestMatchers("/auth/register").permitAll();
+					auth.requestMatchers("/auth/login").permitAll();
+					auth.anyRequest().authenticated();
+				})
 				.httpBasic(c -> c.authenticationEntryPoint(
 				         (request, response, authException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase())))
 				.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
