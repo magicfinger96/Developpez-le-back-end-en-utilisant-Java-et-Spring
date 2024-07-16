@@ -23,7 +23,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.model.User;
 import com.openclassrooms.RentalProject.service.CustomUserDetailsService;
+import com.openclassrooms.RentalProject.service.ModelMapperService;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +34,9 @@ public class SpringSecurityConfig {
 	
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
+	
+	@Autowired
+	private ModelMapperService modelMapperService;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -74,6 +80,6 @@ public class SpringSecurityConfig {
 	
 	@Bean
 	public ModelMapper modelMapper() {
-	    return new ModelMapper();
+		return modelMapperService.createModelMapper();
 	}
 }

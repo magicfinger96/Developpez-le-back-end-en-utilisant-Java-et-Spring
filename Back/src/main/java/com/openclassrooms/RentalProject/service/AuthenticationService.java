@@ -33,20 +33,11 @@ public class AuthenticationService {
 	
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-	
-	public AuthenticationService() {
-		
-		/* modelMapper.typeMap(User.class, RegisterDto.class).addMappings(mapper -> {
-			  mapper.map(src -> src.getBillingAddress().getStreet(),
-			      Destination::setBillingStreet);
-			  mapper.map(src -> src.getBillingAddress().getCity(),
-			      Destination::setBillingCity);
-			}); */
-	}
+
 	
 	public AuthSuccessDto register(RegisterDto registerDto) {
 		
-		User user = new ModelMapper().map(registerDto, User.class);
+		User user = modelMapper.map(registerDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		Date date = new Date();
@@ -81,10 +72,7 @@ public class AuthenticationService {
 	public UserDto getMe() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepository.findByEmail(email);
-		
-		
-		UserDto userDto = new ModelMapper().map(user, UserDto.class);
-		
+		UserDto userDto = modelMapper.map(user, UserDto.class);
 		return userDto;
 	}
 }

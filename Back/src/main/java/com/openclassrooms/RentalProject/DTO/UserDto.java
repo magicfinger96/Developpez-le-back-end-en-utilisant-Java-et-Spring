@@ -9,6 +9,6 @@ public class UserDto {
 	int id;
 	String name;
 	String email;
-	Date createdAt;
-	Date updatedAt;
+	Date created_at;
+	Date updated_at;
 }
