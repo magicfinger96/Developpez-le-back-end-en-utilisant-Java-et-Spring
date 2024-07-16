@@ -1,37 +1,46 @@
 package com.openclassrooms.RentalProject.controller;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.RentalProject.model.User;
-import com.openclassrooms.RentalProject.service.JWTService;
+import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
+import com.openclassrooms.RentalProject.DTO.LoginDto;
+import com.openclassrooms.RentalProject.DTO.RegisterDto;
+import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.service.AuthenticationService;
 
 @RestController
 public class AuthenticationController {
-
-	public JWTService jwtService;
 	
+	@Autowired
+	private AuthenticationService authenticationService;
 	
-	public AuthenticationController(JWTService jwtService) {
-		this.jwtService = jwtService;
-	}
 	
 	@PostMapping("/auth/login")
-	public String login(Authentication authentication) {
-		String token = jwtService.generateToken(authentication);
-		return token;
+	public ResponseEntity<AuthSuccessDto> login(@RequestBody LoginDto loginDto) {
+		
+		ResponseEntity<AuthSuccessDto> response;
+		try {
+			AuthSuccessDto authSuccess = authenticationService.login(loginDto);
+			response = ResponseEntity.ok(authSuccess);
+		} catch(Exception exception) {
+			response = new ResponseEntity<AuthSuccessDto>(HttpStatus.UNAUTHORIZED);
+		}
+		return response;
 	}
 	
 	@PostMapping("/auth/register")
-	public String register() {
-		String token = jwtService.generateToken(authentication);
-		return token;
+	public ResponseEntity<AuthSuccessDto> register(@RequestBody RegisterDto registerDto) {
+		return ResponseEntity.ok(authenticationService.register(registerDto));
 	}
 	
 	@GetMapping("/auth/me")
-	public User getMe() {
-		return null;
+	public UserDto getMe() {
+		return authenticationService.getMe();
 	}
 }
