@@ -3,7 +3,9 @@ package com.openclassrooms.RentalProject.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.RentalProject.DTO.RentalDto;
 import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.model.User;
 
 @Service
@@ -17,6 +19,14 @@ public class ModelMapperService {
 			  mapper.map(src -> src.getUpdateDate(),
 					  UserDto::setUpdated_at);
 			});
+	    
+	    modelMapper.typeMap(RentalDto.class, Rental.class).addMappings(mapper -> {
+			  mapper.map(src -> src.getCreated_at(),
+					  Rental::setCreationDate);
+			  mapper.map(src -> src.getUpdated_at(),
+					  Rental::setUpdateDate);
+			});
+	    
 	    return modelMapper;
 	}
 }

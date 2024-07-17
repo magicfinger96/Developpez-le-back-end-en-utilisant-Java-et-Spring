@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.openclassrooms.RentalProject.DTO.RentalDto;
+import com.openclassrooms.RentalProject.DTO.RentalResponseDto;
 import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.service.RentalService;
 
@@ -44,15 +46,18 @@ public class RentalController {
         }
         return rental.get();
     }
-    
-	/**
-	 * Create - Add a new rental
-	 * @param rental An object Rental
-	 * @return The Rental object saved
-	 */
-	@PostMapping("/rental")
-	public Rental createEmployee(@RequestBody Rental rental) {
-		return rentalService.saveRental(rental);
+
+	@PostMapping("/rentals")
+	public RentalResponseDto createRental(@RequestBody RentalDto rental) {
+		RentalResponseDto response = new RentalResponseDto();
+		try {
+			rentalService.saveRental(rental);
+		} catch(Exception e){
+			response.setMessage("Rental created !");
+			return response;
+		}
+		response.setMessage("Rental creation failed !");
+		return response;
 	}
 	
 	/**
