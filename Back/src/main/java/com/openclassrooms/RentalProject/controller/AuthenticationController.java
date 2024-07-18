@@ -23,15 +23,12 @@ public class AuthenticationController {
 	
 	@PostMapping("/auth/login")
 	public ResponseEntity<AuthSuccessDto> login(@RequestBody LoginDto loginDto) {
-		
-		ResponseEntity<AuthSuccessDto> response;
 		try {
 			AuthSuccessDto authSuccess = authenticationService.login(loginDto);
-			response = ResponseEntity.ok(authSuccess);
+			return ResponseEntity.ok(authSuccess);
 		} catch(Exception exception) {
-			response = new ResponseEntity<AuthSuccessDto>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<AuthSuccessDto>(HttpStatus.UNAUTHORIZED);
 		}
-		return response;
 	}
 	
 	@PostMapping("/auth/register")
