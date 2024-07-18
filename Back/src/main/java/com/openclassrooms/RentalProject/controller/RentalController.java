@@ -48,16 +48,50 @@ public class RentalController {
     }
 
 	@PostMapping("/rentals")
-	public RentalResponseDto createRental(@RequestBody RentalDto rental) {
-		RentalResponseDto response = new RentalResponseDto();
-		try {
-			rentalService.saveRental(rental);
-		} catch(Exception e){
-			response.setMessage("Rental created !");
-			return response;
+	public ResponseEntity<RentalResponse> createRental(
+			@Valid @RequestParam("name") String name,
+			@Valid @RequestParam("surface") String surface,
+			@Valid @RequestParam("price") String price,
+			@Valid @RequestParam("picture") MultipartFile picture,
+			@Valid @RequestParam("description") String description) {
+		
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = userService.getUserByEmail(email);
+		if (user == null) {
+			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
 		}
-		response.setMessage("Rental creation failed !");
-		return response;
+		
+		RentalDto rentalDto = new RentalDto();
+		Date now = new Date();
+		rentalDto.setCreated_at(now);
+		rentalDto.setUpdated_at(now);
+		
+		rentalDto.setOwner_id(user.getId());
+		rentalDto.setName(name);
+		rentalDto.setSurface(Float.parseFloat(surface));
+		rentalDto.setPrice(Float.parseFloat(price));
+		rentalDto.setDescription(description);
+		
+		String picturePath;
+		try {
+			picturePath = imageService.saveImage(picture);
+		} catch (IOException e) {
+			System.out.println("dede " + e);
+			return new ResponseEntity<RentalResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		rentalDto.setPicture(picturePath);
+		
+		try {
+			rentalService.saveRental(rentalDto);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
+		}
+		
+		RentalResponse response = new RentalResponse();
+		response.setMessage("Rental created !");
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	/**

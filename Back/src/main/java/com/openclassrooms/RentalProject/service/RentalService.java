@@ -38,8 +38,6 @@ public class RentalService {
 		return rentalRepository.findById(id);
 	}
 	
-	public void saveRental(RentalDto rentalDto) throws Exception {
-		Rental rental = modelMapper.map(rentalDto, Rental.class);
 		
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepository.findByEmail(email);
@@ -51,10 +49,16 @@ public class RentalService {
 		Date now = new Date();
 		rental.setCreationDate(now);
 		rental.setUpdateDate(now);
+	
+	public void saveRental(RentalDto rentalDto) throws NotFoundException {
+		Rental rental = modelMapper.map(rentalDto, Rental.class);
+		Optional<User> owner = userRepository.findById(rentalDto.getOwner_id());
 		
-		String picturePath = pictureService.saveImageToStorage(rentalDto.getPicture());
-		rental.setPicture(picturePath);
+		if(owner.isEmpty()) {
+			throw new NotFoundException();
+		}
 		
-		rentalRepository.save(rental);		
+		rental.setOwner(owner.get());
+		rentalRepository.save(rental);	
 	}
 }

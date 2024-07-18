@@ -22,4 +22,8 @@ public class UserService {
 	public Optional<User> getUserById(Integer id) {
 		return userRepository.findById(id);
 	}
+	
+	public User getUserByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
 }

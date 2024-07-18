@@ -3,6 +3,6 @@ package com.openclassrooms.RentalProject.DTO;
 import lombok.Data;
 
 @Data
-public class RentalResponseDto {
+public class RentalResponse {
 	private String message;
 }
