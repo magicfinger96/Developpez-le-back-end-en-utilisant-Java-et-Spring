@@ -1,50 +1,59 @@
 package com.openclassrooms.RentalProject.controller;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.openclassrooms.RentalProject.DTO.RentalsDto;
 import com.openclassrooms.RentalProject.DTO.RentalDto;
-import com.openclassrooms.RentalProject.DTO.RentalResponseDto;
+import com.openclassrooms.RentalProject.DTO.RentalResponse;
 import com.openclassrooms.RentalProject.model.Rental;
+import com.openclassrooms.RentalProject.model.User;
+import com.openclassrooms.RentalProject.service.ImageService;
 import com.openclassrooms.RentalProject.service.RentalService;
+import com.openclassrooms.RentalProject.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class RentalController {
 
     @Autowired
     private RentalService rentalService;
+    
+    @Autowired
+    private UserService userService;
 
-    /**
-    * Read - Get all rentals
-    * @return - An Iterable object of Rental full filled
-    */
+    @Autowired
+    private ImageService imageService;
+
     @GetMapping("/rentals")
-    public Iterable<Rental> getRentals() {
+    public RentalsDto getRentals() {
         return rentalService.getRentals();
     }
     
-    /**
-    * Read - Get a rental with given ID
-    * @param ID of the rental
-    * @return - A Rental
-    */
-    @GetMapping("/rental/{id}")
-    public Rental getRental(@PathVariable("id") final Integer id) {
-        Optional<Rental> rental = rentalService.getRentalById(id);
-        if(rental.isEmpty()) {
-        	throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rental not found.");	
-        }
-        return rental.get();
+    @GetMapping("/api/rentals/{id}")
+    public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
+    	ResponseEntity<RentalDto> response;
+		try {
+			return ResponseEntity.ok(rentalService.getRentalById(id));
+		} catch(Exception e){
+			return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
+		}
     }
 
 	@PostMapping("/rentals")
@@ -101,8 +110,8 @@ public class RentalController {
 	 * @return
 	 */
 	@PutMapping("/rental/{id}")
-	public Rental updateEmployee(@PathVariable("id") final Integer id, @RequestBody Rental rental) {
-		Optional<Rental> rentalToUpdate = rentalService.getRentalById(id);
+	public Rental updateRental(@PathVariable("id") final Integer id, @RequestBody Rental rental) {
+		Optional<Rental> rentalToUpdate = null;//rentalService.getRentalById(id);
 		if(rentalToUpdate.isPresent()) {
 			Rental currentRental = rentalToUpdate.get();
 			
@@ -122,7 +131,7 @@ public class RentalController {
 			}
 			
 			currentRental.setUpdateDate(new Date());
-			rentalService.saveRental(currentRental);
+			//rentalService.saveRental(currentRental);
 			return currentRental;
 		} else {
 			return null;

@@ -1,14 +1,15 @@
 package com.openclassrooms.RentalProject.service;
 
-import java.io.IOException;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.openclassrooms.RentalProject.DTO.RentalsDto;
 import com.openclassrooms.RentalProject.DTO.RentalDto;
 import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.model.User;
@@ -27,28 +28,31 @@ public class RentalService {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	@Autowired
-	private PictureService pictureService;
-	
-	public Iterable<Rental> getRentals() {
-		return rentalRepository.findAll();
+	public RentalsDto getRentals() {
+		List<Rental> rentals = rentalRepository.findAll();
+		
+		List<RentalDto> rentalsDtoList = rentals.stream().map(rental -> {
+			RentalDto dto = modelMapper.map(rental, RentalDto.class);
+			String path = ServletUriComponentsBuilder.fromCurrentRequestUri()
+					.replacePath(dto.getPicture()).toUriString();
+			dto.setPicture(path);
+			return dto;
+		}).toList();
+		
+		RentalsDto rentalsDto = new RentalsDto();
+		rentalsDto.setRentals(rentalsDtoList);
+		return rentalsDto;
 	}
 	
-	public Optional<Rental> getRentalById(Integer id) {
-		return rentalRepository.findById(id);
-	}
-	
+	public RentalDto getRentalById(Integer id) throws Exception {
+		Optional<Rental> rental = rentalRepository.findById(id);
 		
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userRepository.findByEmail(email);
-		
-		if (user == null) {
+		if(rental.isEmpty()) {
 			throw new Exception();
 		}
 		
-		Date now = new Date();
-		rental.setCreationDate(now);
-		rental.setUpdateDate(now);
+		return modelMapper.map(rental, RentalDto.class);
+	}
 	
 	public void saveRental(RentalDto rentalDto) throws NotFoundException {
 		Rental rental = modelMapper.map(rentalDto, Rental.class);

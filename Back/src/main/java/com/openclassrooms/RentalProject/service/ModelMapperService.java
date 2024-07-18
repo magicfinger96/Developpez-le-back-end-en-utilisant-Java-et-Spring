@@ -20,6 +20,15 @@ public class ModelMapperService {
 					  UserDto::setUpdated_at);
 			});
 	    
+	    modelMapper.typeMap(Rental.class, RentalDto.class).addMappings(mapper -> {
+			  mapper.map(src -> src.getCreationDate(),
+					  RentalDto::setCreated_at);
+			  mapper.map(src -> src.getUpdateDate(),
+					  RentalDto::setUpdated_at);
+			  mapper.map(src -> src.getOwner().getId(),
+					  RentalDto::setOwner_id);
+			});
+	    
 	    modelMapper.typeMap(RentalDto.class, Rental.class).addMappings(mapper -> {
 			  mapper.map(src -> src.getCreated_at(),
 					  Rental::setCreationDate);
