@@ -31,13 +31,7 @@ public class RentalService {
 	public RentalsDto getRentals() {
 		List<Rental> rentals = rentalRepository.findAll();
 		
-		List<RentalDto> rentalsDtoList = rentals.stream().map(rental -> {
-			RentalDto dto = modelMapper.map(rental, RentalDto.class);
-			String path = ServletUriComponentsBuilder.fromCurrentRequestUri()
-					.replacePath(dto.getPicture()).toUriString();
-			dto.setPicture(path);
-			return dto;
-		}).toList();
+		List<RentalDto> rentalsDtoList = rentals.stream().map(rental -> modelMapper.map(rental, RentalDto.class)).toList();
 		
 		RentalsDto rentalsDto = new RentalsDto();
 		rentalsDto.setRentals(rentalsDtoList);

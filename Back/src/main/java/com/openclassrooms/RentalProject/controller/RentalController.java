@@ -82,7 +82,7 @@ public class RentalController {
 		
 		String picturePath;
 		try {
-			picturePath = imageService.saveImage(picture);
+			picturePath = imageService.uploadFile(picture);
 		} catch (IOException e) {
 			System.out.println("Error while uploading the file: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
