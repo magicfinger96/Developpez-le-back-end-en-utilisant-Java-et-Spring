@@ -48,7 +48,6 @@ public class RentalController {
     
     @GetMapping("/api/rentals/{id}")
     public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
-    	ResponseEntity<RentalDto> response;
 		try {
 			return ResponseEntity.ok(rentalService.getRentalById(id));
 		} catch(Exception e){
@@ -85,7 +84,7 @@ public class RentalController {
 		try {
 			picturePath = imageService.saveImage(picture);
 		} catch (IOException e) {
-			System.out.println("dede " + e);
+			System.out.println("Error while uploading the file: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
@@ -94,6 +93,7 @@ public class RentalController {
 		try {
 			rentalService.saveRental(rentalDto);
 		} catch (NotFoundException e) {
+			System.out.println("Error while saving the rental: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
 		}
 		
