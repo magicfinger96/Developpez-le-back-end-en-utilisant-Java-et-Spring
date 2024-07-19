@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.openclassrooms.RentalProject.DTO.RentalsDto;
 import com.openclassrooms.RentalProject.DTO.RentalDto;
 import com.openclassrooms.RentalProject.DTO.RentalResponse;
-import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.model.User;
 import com.openclassrooms.RentalProject.service.ImageService;
 import com.openclassrooms.RentalProject.service.RentalService;
@@ -70,10 +68,6 @@ public class RentalController {
 		}
 
 		RentalDto rentalDto = new RentalDto();
-		Date now = new Date();
-		rentalDto.setCreated_at(now);
-		rentalDto.setUpdated_at(now);
-
 		rentalDto.setOwner_id(user.getId());
 		rentalDto.setName(name);
 		rentalDto.setSurface(surface);

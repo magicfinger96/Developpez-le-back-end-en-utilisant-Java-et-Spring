@@ -1,6 +1,5 @@
 package com.openclassrooms.RentalProject.service;
 
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +38,6 @@ public class MessageService {
 			throw new Exception("No rental found");
 		}
 		message.setRental(rental.get());
-
-		Date now = new Date();
-		message.setCreationDate(now);
-		message.setUpdateDate(now);
-
 		message.setMessage(messageRequest.getMessage());
 
 		messageRepository.save(message);

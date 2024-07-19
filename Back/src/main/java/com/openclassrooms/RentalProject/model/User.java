@@ -2,6 +2,9 @@ package com.openclassrooms.RentalProject.model;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,9 +27,11 @@ public class User {
 	private String name;
 	private String password;
 
+	@CreationTimestamp
 	@Column(name = "created_at")
 	private Date creationDate;
 
+	@UpdateTimestamp
 	@Column(name = "updated_at")
 	private Date updateDate;
 }

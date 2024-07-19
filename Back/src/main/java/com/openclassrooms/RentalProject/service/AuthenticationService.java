@@ -1,7 +1,5 @@
 package com.openclassrooms.RentalProject.service;
 
-import java.util.Date;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +12,6 @@ import com.openclassrooms.RentalProject.DTO.LoginDto;
 import com.openclassrooms.RentalProject.DTO.RegisterDto;
 import com.openclassrooms.RentalProject.DTO.UserDto;
 import com.openclassrooms.RentalProject.model.User;
-import com.openclassrooms.RentalProject.repository.UserRepository;
 
 @Service
 public class AuthenticationService {
@@ -38,10 +35,6 @@ public class AuthenticationService {
 
 		User user = modelMapper.map(registerDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-		Date date = new Date();
-		user.setCreationDate(date);
-		user.setUpdateDate(date);
 
 		userService.saveUser(user);
 
