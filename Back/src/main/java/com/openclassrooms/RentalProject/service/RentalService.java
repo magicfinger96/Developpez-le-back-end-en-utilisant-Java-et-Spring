@@ -23,7 +23,7 @@ public class RentalService {
 	private RentalRepository rentalRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -50,7 +50,7 @@ public class RentalService {
 	
 	public void saveRental(RentalDto rentalDto) throws NotFoundException {
 		Rental rental = modelMapper.map(rentalDto, Rental.class);
-		Optional<User> owner = userRepository.findById(rentalDto.getOwner_id());
+		Optional<User> owner = userService.getUserById(rentalDto.getOwner_id());
 		
 		if(owner.isEmpty()) {
 			throw new NotFoundException();
