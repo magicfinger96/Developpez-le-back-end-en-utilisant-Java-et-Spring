@@ -112,41 +112,32 @@ public class RentalController {
 	 * @return a ResponseEntity containing a RentalResponse 
 	 */
 	@PutMapping("/rentals/{id}")
-	public ResponseEntity<RentalResponse> updateRental(@PathVariable("id") final Integer id, @RequestBody RentalDto rental) {
+	public ResponseEntity<RentalResponse> updateRental(@PathVariable("id") final Integer id,
+			@Valid @RequestParam String name, 
+			@Valid @RequestParam int surface,
+			@Valid @RequestParam int price,
+			@Valid @RequestParam String description) {
 		
 		Optional<RentalDto> rentalToUpdate = rentalService.getRentalDtoById(id);
 		
 		if(rentalToUpdate.isEmpty()) {
 			return new ResponseEntity<RentalResponse>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		RentalDto rentalToSave = rentalToUpdate.get();
-		
-		String name = rental.getName();
-		if(name != null && !name.isBlank()) {
-			rentalToSave.setName(name);
-		}
-		
-		float surface = rental.getSurface();
+		rentalToSave.setName(name);
 		rentalToSave.setSurface(surface);
-		
-		float price = rental.getPrice();
 		rentalToSave.setPrice(price);
-		
-		String description = rental.getDescription();
-		if(description != null && !description.isBlank()) {
-			rentalToSave.setDescription(description);
-		}
-		
+		rentalToSave.setDescription(description);
 		rentalToSave.setUpdated_at(new Date());
-		
+
 		try {
 			rentalService.saveRental(rentalToSave);
 		} catch (NotFoundException e) {
 			System.out.println("Failed to save the rental: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		RentalResponse response = new RentalResponse();
 		response.setMessage("Rental updated !");
 		return ResponseEntity.ok(response);
