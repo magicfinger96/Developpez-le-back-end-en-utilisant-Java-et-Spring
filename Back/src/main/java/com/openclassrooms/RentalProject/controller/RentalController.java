@@ -60,6 +60,10 @@ public class RentalController {
 			@Valid @RequestParam("picture") MultipartFile picture,
 			@Valid @RequestParam("description") String description) {
 
+		if (!picture.getContentType().equals("image/jpeg") && !picture.getContentType().equals("image/png")) {
+			return new ResponseEntity<RentalResponse>(HttpStatus.BAD_REQUEST);
+		}
+
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.getUserByEmail(email);
 		if (user == null) {
