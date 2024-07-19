@@ -13,12 +13,16 @@ import com.openclassrooms.RentalProject.DTO.LoginDto;
 import com.openclassrooms.RentalProject.DTO.RegisterDto;
 import com.openclassrooms.RentalProject.DTO.UserDto;
 import com.openclassrooms.RentalProject.service.AuthenticationService;
+import com.openclassrooms.RentalProject.service.UserService;
 
 @RestController
 public class AuthenticationController {
 	
 	@Autowired
 	private AuthenticationService authenticationService;
+	
+	@Autowired
+	private UserService userService;
 	
 	
 	@PostMapping("/auth/login")
@@ -33,6 +37,20 @@ public class AuthenticationController {
 	
 	@PostMapping("/auth/register")
 	public ResponseEntity<AuthSuccessDto> register(@RequestBody RegisterDto registerDto) {
+
+		String name = registerDto.getName();
+		String email = registerDto.getEmail();
+		String password = registerDto.getPassword();
+
+		if (name == null || name.isBlank() || email == null || email.isBlank() || password == null
+				|| password.isBlank()) {
+			return new ResponseEntity<AuthSuccessDto>(HttpStatus.BAD_REQUEST);
+		}
+
+		if (userService.getUserByEmail(registerDto.getEmail()) != null){
+			return new ResponseEntity<AuthSuccessDto>(HttpStatus.CONFLICT);
+		}
+		
 		return ResponseEntity.ok(authenticationService.register(registerDto));
 	}
 	
