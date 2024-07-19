@@ -38,14 +38,18 @@ public class RentalService {
 		return rentalsDto;
 	}
 	
-	public RentalDto getRentalById(Integer id) throws Exception {
+	public RentalDto getRentalDtoById(Integer id) throws NotFoundException {
 		Optional<Rental> rental = rentalRepository.findById(id);
 		
 		if(rental.isEmpty()) {
-			throw new Exception();
+			throw new NotFoundException();
 		}
 		
 		return modelMapper.map(rental, RentalDto.class);
+	}
+	
+	public Optional<Rental> getRentalById(Integer id) {
+		return rentalRepository.findById(id);
 	}
 	
 	public void saveRental(RentalDto rentalDto) throws NotFoundException {

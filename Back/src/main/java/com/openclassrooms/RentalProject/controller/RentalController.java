@@ -49,7 +49,7 @@ public class RentalController {
     @GetMapping("/api/rentals/{id}")
     public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
 		try {
-			return ResponseEntity.ok(rentalService.getRentalById(id));
+			return ResponseEntity.ok(rentalService.getRentalDtoById(id));
 		} catch(Exception e){
 			return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
 		}
