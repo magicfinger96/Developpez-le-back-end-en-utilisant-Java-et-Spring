@@ -29,7 +29,7 @@ public class AuthenticationService {
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
@@ -44,7 +44,7 @@ public class AuthenticationService {
 		user.setCreationDate(date);
 		user.setUpdateDate(date);
 		
-		userRepository.save(user);
+		userService.saveUser(user);
 	
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
 		
@@ -71,7 +71,7 @@ public class AuthenticationService {
 	
 	public UserDto getMe() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userRepository.findByEmail(email);
+		User user = userService.getUserByEmail(email);
 		UserDto userDto = modelMapper.map(user, UserDto.class);
 		return userDto;
 	}
