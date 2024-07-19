@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,7 +85,7 @@ public class RentalController {
 
 		try {
 			rentalService.saveRental(rentalDto);
-		} catch (NotFoundException e) {
+		} catch (Exception e) {
 			System.out.println("Error while saving the rental: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
 		}
@@ -124,7 +123,7 @@ public class RentalController {
 
 		try {
 			rentalService.saveRental(rentalToSave);
-		} catch (NotFoundException e) {
+		} catch (Exception e) {
 			System.out.println("Failed to save the rental: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.NOT_FOUND);
 		}

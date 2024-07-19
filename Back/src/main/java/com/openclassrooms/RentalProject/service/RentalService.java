@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.RentalProject.DTO.RentalsDto;
@@ -51,12 +50,12 @@ public class RentalService {
 		return rentalRepository.findById(id);
 	}
 
-	public void saveRental(RentalDto rentalDto) throws NotFoundException {
+	public void saveRental(RentalDto rentalDto) throws Exception {
 		Rental rental = modelMapper.map(rentalDto, Rental.class);
 		Optional<User> owner = userService.getUserById(rentalDto.getOwner_id());
 
 		if (owner.isEmpty()) {
-			throw new NotFoundException();
+			throw new Exception();
 		}
 
 		rental.setOwner(owner.get());
