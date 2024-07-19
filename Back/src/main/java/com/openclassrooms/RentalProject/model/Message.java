@@ -16,25 +16,25 @@ import lombok.Data;
 @Table(name = "message")
 @Data
 public class Message {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@OneToOne
-	@JoinColumn(name="rental_id")
+	@JoinColumn(name = "rental_id")
 	private Rental rental;
-	
+
 	@OneToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name = "user_id")
 	private User author;
-	
+
 	private String message;
-	
+
 	@Column(name = "created_at")
 	private Date creationDate;
-	
+
 	@Column(name = "updated_at")
 	private Date updateDate;
 }

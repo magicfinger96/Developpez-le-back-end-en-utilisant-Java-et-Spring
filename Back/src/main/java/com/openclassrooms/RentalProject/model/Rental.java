@@ -16,25 +16,25 @@ import lombok.Data;
 @Table(name = "rental")
 @Data
 public class Rental {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	private String name;
 	private float surface;
 	private float price;
 	private String picture;
 	private String description;
-	
+
 	@OneToOne
-	@JoinColumn(name="owner_id")
+	@JoinColumn(name = "owner_id")
 	private User owner;
-	
+
 	@Column(name = "created_at")
 	private Date creationDate;
-	
+
 	@Column(name = "updated_at")
 	private Date updateDate;
 }

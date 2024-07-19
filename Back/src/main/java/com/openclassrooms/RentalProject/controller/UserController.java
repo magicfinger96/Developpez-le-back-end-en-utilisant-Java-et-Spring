@@ -14,22 +14,23 @@ import com.openclassrooms.RentalProject.service.UserService;
 
 @RestController
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
-	
-    /**
-    * Read - Get a user with given ID
-    * @param ID of the user
-    * @return - A User
-    */
-    @GetMapping("/user/{id}")
-    public User getUser(@PathVariable("id") final Integer id) {
-        Optional<User> user = userService.getUserById(id);
-        if(user.isEmpty()) {
-        	throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");	
-        }
-        return user.get();
-    }
+
+	/**
+	 * Read - Get a user with given ID
+	 * 
+	 * @param ID of the user
+	 * @return - A User
+	 */
+	@GetMapping("/user/{id}")
+	public User getUser(@PathVariable("id") final Integer id) {
+		Optional<User> user = userService.getUserById(id);
+		if (user.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return user.get();
+	}
 
 }

@@ -21,54 +21,53 @@ public class AuthenticationService {
 
 	@Autowired
 	public JWTService jwtService;
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
-	
 	public AuthSuccessDto register(RegisterDto registerDto) {
-		
+
 		User user = modelMapper.map(registerDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
+
 		Date date = new Date();
 		user.setCreationDate(date);
 		user.setUpdateDate(date);
-		
+
 		userService.saveUser(user);
-	
+
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
-		
+
 		AuthSuccessDto success = new AuthSuccessDto();
 		success.setToken(jwtService.generateToken(userDetails));
 		return success;
 	}
-	
+
 	public AuthSuccessDto login(LoginDto loginDto) throws Exception {
-		
+
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginDto.getEmail());
 		if (userDetails == null) {
 			throw new Exception();
 		}
-		
+
 		if (!passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword())) {
 			throw new Exception();
 		}
-		
+
 		AuthSuccessDto success = new AuthSuccessDto();
 		success.setToken(jwtService.generateToken(userDetails));
 		return success;
 	}
-	
+
 	public UserDto getMe() {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.getUserByEmail(email);

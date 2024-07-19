@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MessageRequest {
-    int rental_id;
-    int user_id;
-    String message;
+	int rental_id;
+	int user_id;
+	String message;
 }

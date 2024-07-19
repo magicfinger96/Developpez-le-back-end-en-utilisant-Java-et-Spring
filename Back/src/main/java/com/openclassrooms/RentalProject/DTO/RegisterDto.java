@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class RegisterDto {
 
-    private String email;
+	private String email;
 
-    private String name;
+	private String name;
 
-    private String password;
+	private String password;
 
 }

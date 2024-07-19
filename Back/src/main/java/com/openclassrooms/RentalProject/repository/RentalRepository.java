@@ -9,4 +9,3 @@ import com.openclassrooms.RentalProject.model.Rental;
 public interface RentalRepository extends JpaRepository<Rental, Integer> {
 
 }
-

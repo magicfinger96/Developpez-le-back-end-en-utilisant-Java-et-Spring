@@ -13,25 +13,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JWTService {
-	
+
 	private JwtEncoder jwtEncoder;
-	
+
 	public JWTService(JwtEncoder jwtEncoder) {
 		this.jwtEncoder = jwtEncoder;
 	}
-	
+
 	public String generateToken(UserDetails userDetails) {
 		Instant now = Instant.now();
-		JwtClaimsSet claims = JwtClaimsSet.builder()
-				.issuer("self")
-				.issuedAt(now)
-				.expiresAt(now.plus(1, ChronoUnit.DAYS))
-				.subject(userDetails.getUsername())
-				.build();
-		
-		JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
-		
+		JwtClaimsSet claims = JwtClaimsSet.builder().issuer("self").issuedAt(now)
+				.expiresAt(now.plus(1, ChronoUnit.DAYS)).subject(userDetails.getUsername()).build();
+
+		JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters
+				.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
+
 		return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
 	}
-	
+
 }

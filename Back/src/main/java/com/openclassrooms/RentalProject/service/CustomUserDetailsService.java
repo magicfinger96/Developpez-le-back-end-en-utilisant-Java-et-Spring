@@ -16,16 +16,17 @@ import com.openclassrooms.RentalProject.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-	
+
 	@Autowired
 	private UserRepository dbUserRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = dbUserRepository.findByEmail(username);
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getGrantedAuthorities("USER"));
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+				getGrantedAuthorities("USER"));
 	}
-	
+
 	private List<GrantedAuthority> getGrantedAuthorities(String role) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_" + role));

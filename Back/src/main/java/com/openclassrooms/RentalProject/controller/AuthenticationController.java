@@ -17,24 +17,23 @@ import com.openclassrooms.RentalProject.service.UserService;
 
 @RestController
 public class AuthenticationController {
-	
+
 	@Autowired
 	private AuthenticationService authenticationService;
-	
+
 	@Autowired
 	private UserService userService;
-	
-	
+
 	@PostMapping("/auth/login")
 	public ResponseEntity<AuthSuccessDto> login(@RequestBody LoginDto loginDto) {
 		try {
 			AuthSuccessDto authSuccess = authenticationService.login(loginDto);
 			return ResponseEntity.ok(authSuccess);
-		} catch(Exception exception) {
+		} catch (Exception exception) {
 			return new ResponseEntity<AuthSuccessDto>(HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
+
 	@PostMapping("/auth/register")
 	public ResponseEntity<AuthSuccessDto> register(@RequestBody RegisterDto registerDto) {
 
@@ -47,13 +46,13 @@ public class AuthenticationController {
 			return new ResponseEntity<AuthSuccessDto>(HttpStatus.BAD_REQUEST);
 		}
 
-		if (userService.getUserByEmail(registerDto.getEmail()) != null){
+		if (userService.getUserByEmail(registerDto.getEmail()) != null) {
 			return new ResponseEntity<AuthSuccessDto>(HttpStatus.CONFLICT);
 		}
-		
+
 		return ResponseEntity.ok(authenticationService.register(registerDto));
 	}
-	
+
 	@GetMapping("/auth/me")
 	public ResponseEntity<UserDto> getMe() {
 		return ResponseEntity.ok(authenticationService.getMe());

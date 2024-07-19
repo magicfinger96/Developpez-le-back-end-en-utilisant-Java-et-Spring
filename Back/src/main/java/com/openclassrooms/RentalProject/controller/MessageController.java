@@ -14,27 +14,28 @@ import com.openclassrooms.RentalProject.service.MessageService;
 @RestController
 public class MessageController {
 
-    @Autowired
-    private MessageService messageService;
-    
+	@Autowired
+	private MessageService messageService;
+
 	/**
 	 * Create - Add a new message
+	 * 
 	 * @param message An object ResponseEntity<MessageResponse>
 	 * @return The ResponseEntity with a MessageResponse if succeeded
 	 */
 	@PostMapping("/messages")
 	public ResponseEntity<MessageResponse> createMessage(@RequestBody MessageRequest message) {
-		
+
 		try {
 			messageService.saveMessage(message);
 		} catch (Exception e) {
 			System.out.print("Error while creating a message: " + e);
 			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		MessageResponse response = new MessageResponse();
 		response.setMessage("Message send with success");
-		
+
 		return ResponseEntity.ok(response);
 	}
 }

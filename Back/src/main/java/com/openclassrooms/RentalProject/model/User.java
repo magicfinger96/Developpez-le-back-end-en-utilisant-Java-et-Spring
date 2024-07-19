@@ -14,19 +14,19 @@ import lombok.Data;
 @Table(name = "user")
 @Data
 public class User {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	private String email;
 	private String name;
 	private String password;
- 
+
 	@Column(name = "created_at")
 	private Date creationDate;
-	
+
 	@Column(name = "updated_at")
 	private Date updateDate;
 }

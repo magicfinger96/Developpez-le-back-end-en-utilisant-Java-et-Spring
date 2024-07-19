@@ -32,56 +32,54 @@ import jakarta.validation.Valid;
 @RestController
 public class RentalController {
 
-    @Autowired
-    private RentalService rentalService;
-    
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private RentalService rentalService;
 
-    @Autowired
-    private ImageService imageService;
+	@Autowired
+	private UserService userService;
 
-    @GetMapping("/rentals")
-    public RentalsDto getRentals() {
-        return rentalService.getRentals();
-    }
-    
-    @GetMapping("/rentals/{id}")
-    public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
-    	
-    	Optional<RentalDto> rentalDto = rentalService.getRentalDtoById(id);
-    	
-    	if(rentalDto.isPresent()) {
-    		return ResponseEntity.ok(rentalDto.get());
-    	}
-    	return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
-    }
+	@Autowired
+	private ImageService imageService;
+
+	@GetMapping("/rentals")
+	public RentalsDto getRentals() {
+		return rentalService.getRentals();
+	}
+
+	@GetMapping("/rentals/{id}")
+	public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
+
+		Optional<RentalDto> rentalDto = rentalService.getRentalDtoById(id);
+
+		if (rentalDto.isPresent()) {
+			return ResponseEntity.ok(rentalDto.get());
+		}
+		return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
+	}
 
 	@PostMapping("/rentals")
-	public ResponseEntity<RentalResponse> createRental(
-			@Valid @RequestParam("name") String name,
-			@Valid @RequestParam("surface") int surface,
-			@Valid @RequestParam("price") int price,
+	public ResponseEntity<RentalResponse> createRental(@Valid @RequestParam("name") String name,
+			@Valid @RequestParam("surface") int surface, @Valid @RequestParam("price") int price,
 			@Valid @RequestParam("picture") MultipartFile picture,
 			@Valid @RequestParam("description") String description) {
-		
+
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userService.getUserByEmail(email);
 		if (user == null) {
 			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		RentalDto rentalDto = new RentalDto();
 		Date now = new Date();
 		rentalDto.setCreated_at(now);
 		rentalDto.setUpdated_at(now);
-		
+
 		rentalDto.setOwner_id(user.getId());
 		rentalDto.setName(name);
 		rentalDto.setSurface(surface);
 		rentalDto.setPrice(price);
 		rentalDto.setDescription(description);
-		
+
 		String picturePath;
 		try {
 			picturePath = imageService.uploadFile(picture);
@@ -89,38 +87,37 @@ public class RentalController {
 			System.out.println("Error while uploading the file: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		rentalDto.setPicture(picturePath);
-		
+
 		try {
 			rentalService.saveRental(rentalDto);
 		} catch (NotFoundException e) {
 			System.out.println("Error while saving the rental: " + e);
 			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		RentalResponse response = new RentalResponse();
 		response.setMessage("Rental created !");
-		
+
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * Update - Update an existing rental
-	 * @param id - The id of the rental to update
+	 * 
+	 * @param id     - The id of the rental to update
 	 * @param rental - The Rental object updated
-	 * @return a ResponseEntity containing a RentalResponse 
+	 * @return a ResponseEntity containing a RentalResponse
 	 */
 	@PutMapping("/rentals/{id}")
 	public ResponseEntity<RentalResponse> updateRental(@PathVariable("id") final Integer id,
-			@Valid @RequestParam String name, 
-			@Valid @RequestParam int surface,
-			@Valid @RequestParam int price,
+			@Valid @RequestParam String name, @Valid @RequestParam int surface, @Valid @RequestParam int price,
 			@Valid @RequestParam String description) {
-		
+
 		Optional<RentalDto> rentalToUpdate = rentalService.getRentalDtoById(id);
-		
-		if(rentalToUpdate.isEmpty()) {
+
+		if (rentalToUpdate.isEmpty()) {
 			return new ResponseEntity<RentalResponse>(HttpStatus.NOT_FOUND);
 		}
 
