@@ -46,7 +46,7 @@ public class RentalController {
         return rentalService.getRentals();
     }
     
-    @GetMapping("/api/rentals/{id}")
+    @GetMapping("/rentals/{id}")
     public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
     	
     	Optional<RentalDto> rentalDto = rentalService.getRentalDtoById(id);
