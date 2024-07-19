@@ -1,6 +1,7 @@
 package com.openclassrooms.RentalProject.service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ public class ImageService {
     }
     
     public String uploadFile(MultipartFile file) throws IOException {
-        s3client.putObject(new PutObjectRequest(bucketName, file.getName(), file.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3client.getUrl(bucketName, file.getName()).toString();
+        String key = UUID.randomUUID().toString() + "_" + file.getName();
+        s3client.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
+        return s3client.getUrl(bucketName, key).toString();
     }
 }
