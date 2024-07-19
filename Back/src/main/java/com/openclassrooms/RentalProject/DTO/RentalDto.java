@@ -8,8 +8,8 @@ import lombok.Data;
 public class RentalDto {
 	private int id;
 	private String name;
-	private float surface;
-	private float price;
+	private int surface;
+	private int price;
 	private String picture;
 	private String description;
 	private int owner_id;

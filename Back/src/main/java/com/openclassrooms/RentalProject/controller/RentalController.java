@@ -60,8 +60,8 @@ public class RentalController {
 	@PostMapping("/rentals")
 	public ResponseEntity<RentalResponse> createRental(
 			@Valid @RequestParam("name") String name,
-			@Valid @RequestParam("surface") String surface,
-			@Valid @RequestParam("price") String price,
+			@Valid @RequestParam("surface") int surface,
+			@Valid @RequestParam("price") int price,
 			@Valid @RequestParam("picture") MultipartFile picture,
 			@Valid @RequestParam("description") String description) {
 		
@@ -78,8 +78,8 @@ public class RentalController {
 		
 		rentalDto.setOwner_id(user.getId());
 		rentalDto.setName(name);
-		rentalDto.setSurface(Float.parseFloat(surface));
-		rentalDto.setPrice(Float.parseFloat(price));
+		rentalDto.setSurface(surface);
+		rentalDto.setPrice(price);
 		rentalDto.setDescription(description);
 		
 		String picturePath;
