@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nimbusds.jose.JOSEException;
 import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
 import com.openclassrooms.RentalProject.DTO.LoginDto;
 import com.openclassrooms.RentalProject.DTO.RegisterDto;
@@ -50,7 +51,11 @@ public class AuthenticationController {
 			return new ResponseEntity<AuthSuccessDto>(HttpStatus.CONFLICT);
 		}
 
-		return ResponseEntity.ok(authenticationService.register(registerDto));
+		try {
+			return ResponseEntity.ok(authenticationService.register(registerDto));
+		} catch (JOSEException e) {
+			return new ResponseEntity<AuthSuccessDto>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping("/auth/me")

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nimbusds.jose.JOSEException;
 import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
 import com.openclassrooms.RentalProject.DTO.LoginDto;
 import com.openclassrooms.RentalProject.DTO.RegisterDto;
@@ -31,7 +32,7 @@ public class AuthenticationService {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
-	public AuthSuccessDto register(RegisterDto registerDto) {
+	public AuthSuccessDto register(RegisterDto registerDto) throws JOSEException {
 
 		User user = modelMapper.map(registerDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
