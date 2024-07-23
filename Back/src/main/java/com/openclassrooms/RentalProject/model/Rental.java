@@ -15,6 +15,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+/**
+ * Entity of a rental.
+ */
 @Entity
 @Table(name = "rental")
 @Data

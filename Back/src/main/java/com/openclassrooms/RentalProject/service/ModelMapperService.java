@@ -8,6 +8,9 @@ import com.openclassrooms.RentalProject.DTO.UserDto;
 import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.model.User;
 
+/**
+ * Service which handles the ModelMapper.
+ */
 @Service
 public class ModelMapperService {
 

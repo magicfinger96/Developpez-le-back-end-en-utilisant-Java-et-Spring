@@ -11,6 +11,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service handling with the JSON Web Tokens.
+ */
 @Service
 public class JWTService {
 
@@ -20,6 +23,12 @@ public class JWTService {
 		this.jwtEncoder = jwtEncoder;
 	}
 
+	/**
+	 * Generates a token with RS256 algorithm which last 1 day.
+	 * 
+	 * @param userDetails its user name is used to generate the token. 
+	 * @return the token.
+	 */
 	public String generateToken(UserDetails userDetails) {
 		Instant now = Instant.now();
 		JwtClaimsSet claims = JwtClaimsSet.builder().issuer("self").issuedAt(now)

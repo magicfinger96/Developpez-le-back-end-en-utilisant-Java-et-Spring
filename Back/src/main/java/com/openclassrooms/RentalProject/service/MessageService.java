@@ -11,6 +11,9 @@ import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.model.User;
 import com.openclassrooms.RentalProject.repository.MessageRepository;
 
+/**
+ * Service which handles the messages from a user about a rental.
+ */
 @Service
 public class MessageService {
 
@@ -23,6 +26,13 @@ public class MessageService {
 	@Autowired
 	private RentalService rentalService;
 
+	/**
+	 * Save a message.
+	 * 
+	 * @param messageRequest data of the message.
+	 * @throws Exception when the user or rental associated to the message are not
+	 *                   found.
+	 */
 	public void saveMessage(MessageRequest messageRequest) throws Exception {
 
 		Message message = new Message();

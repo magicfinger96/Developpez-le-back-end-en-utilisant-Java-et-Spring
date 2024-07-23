@@ -4,6 +4,9 @@ import java.util.Date;
 
 import lombok.Data;
 
+/**
+ * DTO of a user.
+ */
 @Data
 public class UserDto {
 	int id;

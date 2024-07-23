@@ -19,10 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.openclassrooms.RentalProject.DTO.RentalsDto;
 import com.openclassrooms.RentalProject.DTO.UserDto;
-import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
 import com.openclassrooms.RentalProject.DTO.MessageResponse;
 import com.openclassrooms.RentalProject.DTO.RentalDto;
-import com.openclassrooms.RentalProject.DTO.RentalResponse;
 import com.openclassrooms.RentalProject.service.ImageService;
 import com.openclassrooms.RentalProject.service.RentalService;
 import com.openclassrooms.RentalProject.service.UserService;
@@ -101,29 +99,29 @@ public class RentalController {
 	 */
 	@Operation(summary = "Create a rental")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Created the rental", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalResponse.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "The picture provided is not png or jpeg", content = @Content),
 			@ApiResponse(responseCode = "401", description = "There is no authenticated user", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Couldn't upload the picture", content = @Content) })
 	@SecurityRequirement(name = "bearerAuth")
 	@PostMapping("/api/rentals")
-	public ResponseEntity<RentalResponse> createRental(@Valid @RequestParam("name") String name,
+	public ResponseEntity<MessageResponse> createRental(@Valid @RequestParam("name") String name,
 			@Valid @RequestParam("surface") int surface, @Valid @RequestParam("price") int price,
 			@Valid @RequestParam("picture") MultipartFile picture,
 			@Valid @RequestParam("description") String description) {
 
 		if (!picture.getContentType().equals("image/jpeg") && !picture.getContentType().equals("image/png")) {
-			return new ResponseEntity<RentalResponse>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageResponse>(HttpStatus.BAD_REQUEST);
 		}
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) {
-			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
 		}
 
 		UserDto user = userService.getUserByEmail(authentication.getName());
 		if (user == null) {
-			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
 		}
 
 		RentalDto rentalDto = new RentalDto();
@@ -138,7 +136,7 @@ public class RentalController {
 			picturePath = imageService.uploadFile(picture);
 		} catch (IOException e) {
 			System.out.println("Error while uploading the file: " + e);
-			return new ResponseEntity<RentalResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<MessageResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		rentalDto.setPicture(picturePath);
@@ -147,11 +145,10 @@ public class RentalController {
 			rentalService.saveRental(rentalDto);
 		} catch (Exception e) {
 			System.out.println("Error while saving the rental: " + e);
-			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
 		}
 
-		RentalResponse response = new RentalResponse();
-		response.setMessage("Rental created !");
+		MessageResponse response = new MessageResponse("Rental created !");
 
 		return ResponseEntity.ok(response);
 	}
@@ -169,18 +166,18 @@ public class RentalController {
 	 */
 	@Operation(summary = "Update a rental")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Updated the rental", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalResponse.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "404", description = "The rental or the owner was not found", content = @Content) })
 	@SecurityRequirement(name = "bearerAuth")
 	@PutMapping("/api/rentals/{id}")
-	public ResponseEntity<RentalResponse> updateRental(@PathVariable("id") final Integer id,
+	public ResponseEntity<MessageResponse> updateRental(@PathVariable("id") final Integer id,
 			@Valid @RequestParam String name, @Valid @RequestParam int surface, @Valid @RequestParam int price,
 			@Valid @RequestParam String description) {
 
 		Optional<RentalDto> rentalToUpdate = rentalService.getRentalDtoById(id);
 
 		if (rentalToUpdate.isEmpty()) {
-			return new ResponseEntity<RentalResponse>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
 		}
 
 		RentalDto rentalToSave = rentalToUpdate.get();
@@ -194,11 +191,10 @@ public class RentalController {
 			rentalService.saveRental(rentalToSave);
 		} catch (Exception e) {
 			System.out.println("Failed to save the rental: " + e);
-			return new ResponseEntity<RentalResponse>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
 		}
 
-		RentalResponse response = new RentalResponse();
-		response.setMessage("Rental updated !");
+		MessageResponse response = new MessageResponse("Rental updated !");
 		return ResponseEntity.ok(response);
 	}
 }

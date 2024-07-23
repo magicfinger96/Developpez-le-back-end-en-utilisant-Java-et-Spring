@@ -15,6 +15,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+/**
+ * Entity of a Message.
+ */
 @Entity
 @Table(name = "message")
 @Data
@@ -25,6 +28,9 @@ public class Message {
 	@Column(name = "id")
 	private int id;
 
+	/**
+	 * Rental for which the message is about.
+	 */
 	@OneToOne
 	@JoinColumn(name = "rental_id")
 	private Rental rental;

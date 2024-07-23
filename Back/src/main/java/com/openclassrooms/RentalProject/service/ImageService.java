@@ -11,6 +11,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+/**
+ * Service handling images with Amazon S3.
+ */
 @Service
 public class ImageService {
 
@@ -22,7 +25,14 @@ public class ImageService {
 	public ImageService(AmazonS3 s3client) {
 		this.s3client = s3client;
 	}
-
+	
+	/**
+	 * Upload a file on AmazonS3 server.
+	 * 
+	 * @param file file to upload.
+	 * @return the URL where is stored the uploaded image.
+	 * @throws IOException if the file can't be read.
+	 */
 	public String uploadFile(MultipartFile file) throws IOException {
 		String key = UUID.randomUUID().toString() + "_" + file.getName();
 		s3client.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), null)

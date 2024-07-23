@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import com.openclassrooms.RentalProject.model.User;
 import com.openclassrooms.RentalProject.repository.UserRepository;
 
+/**
+ * Service handling the UserDetails.
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -27,6 +30,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 				getGrantedAuthorities("USER"));
 	}
 
+	/**
+	 * Returns the granted authorities.
+	 * @param role role we want to add inside the authorities.
+	 * @return a list of GrantedAuthority with only one authority.
+	 */
 	private List<GrantedAuthority> getGrantedAuthorities(String role) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_" + role));

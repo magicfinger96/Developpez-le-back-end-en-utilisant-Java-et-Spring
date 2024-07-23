@@ -2,8 +2,11 @@ package com.openclassrooms.RentalProject.DTO;
 
 import lombok.Data;
 
+/**
+ * Represents a register request.
+ */
 @Data
-public class RegisterDto {
+public class RegisterRequest {
 
 	private String email;
 

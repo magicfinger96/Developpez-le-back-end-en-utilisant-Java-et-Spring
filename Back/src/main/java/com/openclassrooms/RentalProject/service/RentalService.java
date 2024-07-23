@@ -13,6 +13,9 @@ import com.openclassrooms.RentalProject.model.Rental;
 import com.openclassrooms.RentalProject.model.User;
 import com.openclassrooms.RentalProject.repository.RentalRepository;
 
+/**
+ * Service which handles rentals logic.
+ */
 @Service
 public class RentalService {
 
@@ -25,6 +28,11 @@ public class RentalService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	/**
+	 * Get all the rentals.
+	 * 
+	 * @return the rentals.
+	 */
 	public RentalsDto getRentals() {
 		List<Rental> rentals = rentalRepository.findAll();
 
@@ -36,6 +44,12 @@ public class RentalService {
 		return rentalsDto;
 	}
 
+	/**
+	 * Get a rental DTO.
+	 * 
+	 * @param id id of the fetched rental.
+	 * @return a RentalDto
+	 */
 	public Optional<RentalDto> getRentalDtoById(Integer id) {
 		Optional<Rental> rental = rentalRepository.findById(id);
 
@@ -46,10 +60,22 @@ public class RentalService {
 		return Optional.of(modelMapper.map(rental, RentalDto.class));
 	}
 
+	/**
+	 * Get a rental.
+	 * 
+	 * @param id id of the rental.
+	 * @return a rental.
+	 */
 	public Optional<Rental> getRentalById(Integer id) {
 		return rentalRepository.findById(id);
 	}
 
+	/**
+	 * Save a rental.
+	 * 
+	 * @param rentalDto dto of the rental to save.
+	 * @throws Exception thrown if the owner is not found.
+	 */
 	public void saveRental(RentalDto rentalDto) throws Exception {
 		Rental rental = modelMapper.map(rentalDto, Rental.class);
 		Optional<User> owner = userService.getUserById(rentalDto.getOwner_id());

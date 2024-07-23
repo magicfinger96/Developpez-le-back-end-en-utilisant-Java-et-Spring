@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
 import com.openclassrooms.RentalProject.DTO.LoginDto;
-import com.openclassrooms.RentalProject.DTO.RegisterDto;
+import com.openclassrooms.RentalProject.DTO.MessageResponse;
+import com.openclassrooms.RentalProject.DTO.RegisterRequest;
 import com.openclassrooms.RentalProject.DTO.UserDto;
 import com.openclassrooms.RentalProject.service.AuthenticationService;
 import com.openclassrooms.RentalProject.service.UserService;
@@ -45,15 +45,15 @@ public class AuthenticationController {
 	 */
 	@Operation(summary = "Log the user in")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Logged in the user", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessDto.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content) })
 	@PostMapping("/api/auth/login")
-	public ResponseEntity<AuthSuccessDto> login(@RequestBody LoginDto loginDto) {
+	public ResponseEntity<MessageResponse> login(@RequestBody LoginDto loginDto) {
 		try {
-			AuthSuccessDto authSuccess = authenticationService.login(loginDto);
-			return ResponseEntity.ok(authSuccess);
+			String token = authenticationService.login(loginDto);
+			return ResponseEntity.ok(new MessageResponse(token));
 		} catch (Exception exception) {
-			return new ResponseEntity<AuthSuccessDto>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
 		}
 	}
 
@@ -66,11 +66,11 @@ public class AuthenticationController {
 	 */
 	@Operation(summary = "Register the user")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Registered the user", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessDto.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "Some input data are missing", content = @Content),
 			@ApiResponse(responseCode = "409", description = "The email is already registered", content = @Content) })
 	@PostMapping("/api/auth/register")
-	public ResponseEntity<AuthSuccessDto> register(@RequestBody RegisterDto registerDto) {
+	public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest registerDto) {
 
 		String name = registerDto.getName();
 		String email = registerDto.getEmail();
@@ -78,14 +78,15 @@ public class AuthenticationController {
 
 		if (name == null || name.isBlank() || email == null || email.isBlank() || password == null
 				|| password.isBlank()) {
-			return new ResponseEntity<AuthSuccessDto>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageResponse>(HttpStatus.BAD_REQUEST);
 		}
 
 		if (userService.getUserByEmail(registerDto.getEmail()) != null) {
-			return new ResponseEntity<AuthSuccessDto>(HttpStatus.CONFLICT);
+			return new ResponseEntity<MessageResponse>(HttpStatus.CONFLICT);
 		}
 
-		return ResponseEntity.ok(authenticationService.register(registerDto));
+		String token = authenticationService.register(registerDto);
+		return ResponseEntity.ok(new MessageResponse(token));
 	}
 
 	/**

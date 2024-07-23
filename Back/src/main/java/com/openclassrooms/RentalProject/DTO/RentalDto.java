@@ -4,6 +4,9 @@ import java.util.Date;
 
 import lombok.Data;
 
+/***
+ * DTO of a rental.
+ */
 @Data
 public class RentalDto {
 	private int id;

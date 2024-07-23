@@ -49,9 +49,7 @@ public class MessageController {
 			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
 		}
 
-		MessageResponse response = new MessageResponse();
-		response.setMessage("Message send with success");
-
+		MessageResponse response = new MessageResponse("Message send with success");
 		return ResponseEntity.ok(response);
 	}
 }

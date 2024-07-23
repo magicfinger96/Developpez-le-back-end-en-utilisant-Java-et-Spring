@@ -2,18 +2,17 @@ package com.openclassrooms.RentalProject.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.jose.JOSEException;
-import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
 import com.openclassrooms.RentalProject.DTO.LoginDto;
-import com.openclassrooms.RentalProject.DTO.RegisterDto;
-import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.DTO.RegisterRequest;
 import com.openclassrooms.RentalProject.model.User;
 
+/**
+ * Service which handles the authentication logic.
+ */
 @Service
 public class AuthenticationService {
 
@@ -32,7 +31,13 @@ public class AuthenticationService {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
-	public AuthSuccessDto register(RegisterDto registerDto) {
+	/**
+	 * Save a new user in the DDB. Encodes the password before.
+	 * 
+	 * @param registerDto contains user data to save.
+	 * @return the generated JWT.
+	 */
+	public String register(RegisterRequest registerDto) {
 
 		User user = modelMapper.map(registerDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -40,13 +45,17 @@ public class AuthenticationService {
 		userService.saveUser(user);
 
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
-
-		AuthSuccessDto success = new AuthSuccessDto();
-		success.setToken(jwtService.generateToken(userDetails));
-		return success;
+		return jwtService.generateToken(userDetails);
 	}
 
-	public AuthSuccessDto login(LoginDto loginDto) throws Exception {
+	/**
+	 * Check if the credentials are valid.
+	 * 
+	 * @param loginDto contains credentials.
+	 * @return the generated JWT.
+	 * @throws Exception if the user details is null.
+	 */
+	public String login(LoginDto loginDto) throws Exception {
 
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginDto.getEmail());
 		if (userDetails == null) {
@@ -56,9 +65,6 @@ public class AuthenticationService {
 		if (!passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword())) {
 			throw new Exception();
 		}
-
-		AuthSuccessDto success = new AuthSuccessDto();
-		success.setToken(jwtService.generateToken(userDetails));
-		return success;
+		return jwtService.generateToken(userDetails);
 	}
 }

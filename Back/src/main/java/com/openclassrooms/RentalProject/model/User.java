@@ -13,6 +13,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+/**
+ * Entity of a user.
+ */
 @Entity
 @Table(name = "user")
 @Data
