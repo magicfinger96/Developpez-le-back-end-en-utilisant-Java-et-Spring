@@ -11,6 +11,16 @@ import com.openclassrooms.RentalProject.DTO.MessageRequest;
 import com.openclassrooms.RentalProject.DTO.MessageResponse;
 import com.openclassrooms.RentalProject.service.MessageService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+/**
+ * Handles the end points related to the message.
+ */
 @RestController
 public class MessageController {
 
@@ -18,11 +28,17 @@ public class MessageController {
 	private MessageService messageService;
 
 	/**
-	 * Create - Add a new message
+	 * Create - Add a new message.
 	 * 
-	 * @param message An object ResponseEntity<MessageResponse>
-	 * @return The ResponseEntity with a MessageResponse if succeeded
+	 * @param message The message to save.
+	 * @return a ResponseEntity containing a MessageResponse if it succeeded,
+	 *         otherwise returns an error ResponseEntity.
 	 */
+	@Operation(summary = "Create a message")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Created the message", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
+			@ApiResponse(responseCode = "404", description = "User or rental, associated with the message, not found", content = @Content) })
+	@SecurityRequirement(name = "bearerAuth")
 	@PostMapping("/api/messages")
 	public ResponseEntity<MessageResponse> createMessage(@RequestBody MessageRequest message) {
 

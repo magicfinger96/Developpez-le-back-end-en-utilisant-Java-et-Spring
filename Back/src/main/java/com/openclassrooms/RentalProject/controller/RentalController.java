@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,15 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.openclassrooms.RentalProject.DTO.RentalsDto;
+import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
+import com.openclassrooms.RentalProject.DTO.MessageResponse;
 import com.openclassrooms.RentalProject.DTO.RentalDto;
 import com.openclassrooms.RentalProject.DTO.RentalResponse;
-import com.openclassrooms.RentalProject.model.User;
 import com.openclassrooms.RentalProject.service.ImageService;
 import com.openclassrooms.RentalProject.service.RentalService;
 import com.openclassrooms.RentalProject.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
+/**
+ * Handles the end points related to the rental.
+ */
 @RestController
 public class RentalController {
 
@@ -38,11 +50,33 @@ public class RentalController {
 	@Autowired
 	private ImageService imageService;
 
+	/***
+	 * End point that provides all the rentals.
+	 * 
+	 * @return a ResponseEntity containing the rentals.
+	 */
+	@Operation(summary = "Get all the rentals")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Found the rentals", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalsDto.class)) }) })
+	@SecurityRequirement(name = "bearerAuth")
 	@GetMapping("/api/rentals")
-	public RentalsDto getRentals() {
-		return rentalService.getRentals();
+	public ResponseEntity<RentalsDto> getRentals() {
+		return ResponseEntity.ok(rentalService.getRentals());
 	}
 
+	/**
+	 * End point that provides a rental.
+	 * 
+	 * @param id id of the rental.
+	 * @return a ResponseEntity containing the rental if the call succeeded.
+	 *         Otherwise, returns a error ResponseEntity.
+	 */
+	@Operation(summary = "Get a rental")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Found the rental", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = RentalDto.class)) }),
+			@ApiResponse(responseCode = "404", description = "The rental was not found", content = @Content) })
+	@SecurityRequirement(name = "bearerAuth")
 	@GetMapping("/api/rentals/{id}")
 	public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
 
@@ -54,6 +88,24 @@ public class RentalController {
 		return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * End point that creates a rental.
+	 * 
+	 * @param name        name of the rental.
+	 * @param surface     surface of the rental.
+	 * @param price       price of the rental.
+	 * @param picture     picture of the rental.
+	 * @param description description of the rental.
+	 * @return a ResponseEntity containing a successful message if the creation
+	 *         succeeded. Otherwise, returns an error ResponseEntity.
+	 */
+	@Operation(summary = "Create a rental")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Created the rental", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalResponse.class)) }),
+			@ApiResponse(responseCode = "400", description = "The picture provided is not png or jpeg", content = @Content),
+			@ApiResponse(responseCode = "401", description = "There is no authenticated user", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Couldn't upload the picture", content = @Content) })
+	@SecurityRequirement(name = "bearerAuth")
 	@PostMapping("/api/rentals")
 	public ResponseEntity<RentalResponse> createRental(@Valid @RequestParam("name") String name,
 			@Valid @RequestParam("surface") int surface, @Valid @RequestParam("price") int price,
@@ -64,8 +116,12 @@ public class RentalController {
 			return new ResponseEntity<RentalResponse>(HttpStatus.BAD_REQUEST);
 		}
 
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userService.getUserByEmail(email);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) {
+			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
+		}
+
+		UserDto user = userService.getUserByEmail(authentication.getName());
 		if (user == null) {
 			return new ResponseEntity<RentalResponse>(HttpStatus.UNAUTHORIZED);
 		}
@@ -101,12 +157,21 @@ public class RentalController {
 	}
 
 	/**
-	 * Update - Update an existing rental
+	 * End point that updates a rental.
 	 * 
-	 * @param id     - The id of the rental to update
-	 * @param rental - The Rental object updated
-	 * @return a ResponseEntity containing a RentalResponse
+	 * @param id          id of the rental.
+	 * @param name        updated name of the rental.
+	 * @param surface     updated surface of the rental.
+	 * @param price       updated price of the rental.
+	 * @param description updated description of the rental.
+	 * @return a ResponseEntity containing a message if the update succeeded.
+	 *         Otherwise, an error ResponseEntity.
 	 */
+	@Operation(summary = "Update a rental")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Updated the rental", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalResponse.class)) }),
+			@ApiResponse(responseCode = "404", description = "The rental or the owner was not found", content = @Content) })
+	@SecurityRequirement(name = "bearerAuth")
 	@PutMapping("/api/rentals/{id}")
 	public ResponseEntity<RentalResponse> updateRental(@PathVariable("id") final Integer id,
 			@Valid @RequestParam String name, @Valid @RequestParam int surface, @Valid @RequestParam int price,

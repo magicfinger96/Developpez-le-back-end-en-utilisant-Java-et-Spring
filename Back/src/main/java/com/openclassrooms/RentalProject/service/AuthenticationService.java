@@ -32,7 +32,7 @@ public class AuthenticationService {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
-	public AuthSuccessDto register(RegisterDto registerDto) throws JOSEException {
+	public AuthSuccessDto register(RegisterDto registerDto) {
 
 		User user = modelMapper.map(registerDto, User.class);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -60,12 +60,5 @@ public class AuthenticationService {
 		AuthSuccessDto success = new AuthSuccessDto();
 		success.setToken(jwtService.generateToken(userDetails));
 		return success;
-	}
-
-	public UserDto getMe() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userService.getUserByEmail(email);
-		UserDto userDto = modelMapper.map(user, UserDto.class);
-		return userDto;
 	}
 }

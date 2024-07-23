@@ -3,12 +3,13 @@ package com.openclassrooms.RentalProject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nimbusds.jose.JOSEException;
 import com.openclassrooms.RentalProject.DTO.AuthSuccessDto;
 import com.openclassrooms.RentalProject.DTO.LoginDto;
 import com.openclassrooms.RentalProject.DTO.RegisterDto;
@@ -16,6 +17,16 @@ import com.openclassrooms.RentalProject.DTO.UserDto;
 import com.openclassrooms.RentalProject.service.AuthenticationService;
 import com.openclassrooms.RentalProject.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+/**
+ * Handles the end points related to the user authentication.
+ */
 @RestController
 public class AuthenticationController {
 
@@ -25,6 +36,17 @@ public class AuthenticationController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * End point logging the user in.
+	 * 
+	 * @param loginDto credentials used to log in.
+	 * @return a ResponseEntity containing the jwt token if succeeded. Otherwise an
+	 *         error ResponseEntity.
+	 */
+	@Operation(summary = "Log the user in")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Logged in the user", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessDto.class)) }),
+			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content) })
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<AuthSuccessDto> login(@RequestBody LoginDto loginDto) {
 		try {
@@ -35,6 +57,18 @@ public class AuthenticationController {
 		}
 	}
 
+	/**
+	 * End point registering a user.
+	 * 
+	 * @param registerDto the data used to create a new user.
+	 * @return a ResponseEntity containing the jwt token if succeeded. Otherwise an
+	 *         error ResponseEntity.
+	 */
+	@Operation(summary = "Register the user")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Registered the user", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "Some input data are missing", content = @Content),
+			@ApiResponse(responseCode = "409", description = "The email is already registered", content = @Content) })
 	@PostMapping("/api/auth/register")
 	public ResponseEntity<AuthSuccessDto> register(@RequestBody RegisterDto registerDto) {
 
@@ -51,15 +85,32 @@ public class AuthenticationController {
 			return new ResponseEntity<AuthSuccessDto>(HttpStatus.CONFLICT);
 		}
 
-		try {
-			return ResponseEntity.ok(authenticationService.register(registerDto));
-		} catch (JOSEException e) {
-			return new ResponseEntity<AuthSuccessDto>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		return ResponseEntity.ok(authenticationService.register(registerDto));
 	}
 
+	/**
+	 * End point that returns the authenticated user.
+	 * 
+	 * @return a ResponseEntity containing the user. Otherwise, returns a error
+	 *         ResponseEntity.
+	 */
+	@Operation(summary = "Get the authenticated user")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Found the authenticated user", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class)), }),
+			@ApiResponse(responseCode = "401", description = "There is no authenticated user", content = @Content) })
+	@SecurityRequirement(name = "bearerAuth")
 	@GetMapping("/api/auth/me")
 	public ResponseEntity<UserDto> getMe() {
-		return ResponseEntity.ok(authenticationService.getMe());
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null || !authentication.isAuthenticated()) {
+			return new ResponseEntity<UserDto>(HttpStatus.UNAUTHORIZED);
+		}
+
+		String email = authentication.getName();
+
+		return ResponseEntity.ok(userService.getUserByEmail(email));
 	}
 }
