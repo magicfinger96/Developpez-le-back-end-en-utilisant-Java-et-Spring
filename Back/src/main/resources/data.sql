@@ -1,3 +1,6 @@
+CREATE DATABASE rentalddb;
+USE rentalddb;
+
 CREATE TABLE `USER` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `email` varchar(255),
