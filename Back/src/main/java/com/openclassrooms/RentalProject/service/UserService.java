@@ -50,6 +50,10 @@ public class UserService {
 	 */
 	public UserDto getUserByEmail(String email) {
 		User user = userRepository.findByEmail(email);
+		
+		if(user == null) {
+			return null;
+		}
 		return modelMapper.map(user, UserDto.class);
 	}
 	
