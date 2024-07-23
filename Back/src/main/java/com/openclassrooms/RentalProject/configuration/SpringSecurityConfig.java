@@ -35,6 +35,9 @@ import com.nimbusds.jose.util.Base64;
 import com.openclassrooms.RentalProject.service.CustomUserDetailsService;
 import com.openclassrooms.RentalProject.service.ModelMapperService;
 
+/**
+ * Configuration of the Security.
+ */
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
@@ -98,6 +101,11 @@ public class SpringSecurityConfig {
 		return modelMapperService.createModelMapper();
 	}
 
+	/**
+	 * Create a RSAPrivateKey and store it inside the privateKey attribute.
+	 * 
+	 * @param key the key as a String.
+	 */
 	private void createPrivateKey(String key) {
 		try {
 			byte[] encoded = new Base64(key).decode();
@@ -109,6 +117,11 @@ public class SpringSecurityConfig {
 		}
 	}
 
+	/**
+	 * Create a RSAPublicKey and store it inside the publicKey attribute.
+	 * 
+	 * @param key the key as a String.
+	 */
 	private void createPublicKey(String key) {
 		try {
 			byte[] encoded = new Base64(key).decode();
