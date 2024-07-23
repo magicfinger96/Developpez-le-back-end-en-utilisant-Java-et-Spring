@@ -3,10 +3,10 @@ package com.openclassrooms.RentalProject.DTO;
 import lombok.Data;
 
 /**
- * Represents the DTO of a login.
+ * Represents the request to Log in.
  */
 @Data
-public class LoginDto {
+public class LoginRequest {
 
 	private String email;
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.RentalProject.DTO.LoginDto;
+import com.openclassrooms.RentalProject.DTO.LoginRequest;
 import com.openclassrooms.RentalProject.DTO.MessageResponse;
 import com.openclassrooms.RentalProject.DTO.RegisterRequest;
 import com.openclassrooms.RentalProject.DTO.UserDto;
@@ -48,9 +48,9 @@ public class AuthenticationController {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content) })
 	@PostMapping("/api/auth/login")
-	public ResponseEntity<MessageResponse> login(@RequestBody LoginDto loginDto) {
+	public ResponseEntity<MessageResponse> login(@RequestBody LoginRequest loginRequest) {
 		try {
-			String token = authenticationService.login(loginDto);
+			String token = authenticationService.login(loginRequest);
 			return ResponseEntity.ok(new MessageResponse(token));
 		} catch (Exception exception) {
 			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
@@ -70,22 +70,22 @@ public class AuthenticationController {
 			@ApiResponse(responseCode = "400", description = "Some input data are missing", content = @Content),
 			@ApiResponse(responseCode = "409", description = "The email is already registered", content = @Content) })
 	@PostMapping("/api/auth/register")
-	public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest registerDto) {
+	public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest registerRequest) {
 
-		String name = registerDto.getName();
-		String email = registerDto.getEmail();
-		String password = registerDto.getPassword();
+		String name = registerRequest.getName();
+		String email = registerRequest.getEmail();
+		String password = registerRequest.getPassword();
 
 		if (name == null || name.isBlank() || email == null || email.isBlank() || password == null
 				|| password.isBlank()) {
 			return new ResponseEntity<MessageResponse>(HttpStatus.BAD_REQUEST);
 		}
 
-		if (userService.getUserByEmail(registerDto.getEmail()) != null) {
+		if (userService.getUserByEmail(registerRequest.getEmail()) != null) {
 			return new ResponseEntity<MessageResponse>(HttpStatus.CONFLICT);
 		}
 
-		String token = authenticationService.register(registerDto);
+		String token = authenticationService.register(registerRequest);
 		return ResponseEntity.ok(new MessageResponse(token));
 	}
 
