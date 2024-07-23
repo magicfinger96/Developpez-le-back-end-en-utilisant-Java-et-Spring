@@ -25,7 +25,7 @@ public class AuthenticationController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/auth/login")
+	@PostMapping("/api/auth/login")
 	public ResponseEntity<AuthSuccessDto> login(@RequestBody LoginDto loginDto) {
 		try {
 			AuthSuccessDto authSuccess = authenticationService.login(loginDto);
@@ -35,7 +35,7 @@ public class AuthenticationController {
 		}
 	}
 
-	@PostMapping("/auth/register")
+	@PostMapping("/api/auth/register")
 	public ResponseEntity<AuthSuccessDto> register(@RequestBody RegisterDto registerDto) {
 
 		String name = registerDto.getName();
@@ -58,7 +58,7 @@ public class AuthenticationController {
 		}
 	}
 
-	@GetMapping("/auth/me")
+	@GetMapping("/api/auth/me")
 	public ResponseEntity<UserDto> getMe() {
 		return ResponseEntity.ok(authenticationService.getMe());
 	}

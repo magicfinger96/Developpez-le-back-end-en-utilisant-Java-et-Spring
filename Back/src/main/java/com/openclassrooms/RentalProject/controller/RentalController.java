@@ -38,12 +38,12 @@ public class RentalController {
 	@Autowired
 	private ImageService imageService;
 
-	@GetMapping("/rentals")
+	@GetMapping("/api/rentals")
 	public RentalsDto getRentals() {
 		return rentalService.getRentals();
 	}
 
-	@GetMapping("/rentals/{id}")
+	@GetMapping("/api/rentals/{id}")
 	public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
 
 		Optional<RentalDto> rentalDto = rentalService.getRentalDtoById(id);
@@ -54,7 +54,7 @@ public class RentalController {
 		return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
 	}
 
-	@PostMapping("/rentals")
+	@PostMapping("/api/rentals")
 	public ResponseEntity<RentalResponse> createRental(@Valid @RequestParam("name") String name,
 			@Valid @RequestParam("surface") int surface, @Valid @RequestParam("price") int price,
 			@Valid @RequestParam("picture") MultipartFile picture,
@@ -107,7 +107,7 @@ public class RentalController {
 	 * @param rental - The Rental object updated
 	 * @return a ResponseEntity containing a RentalResponse
 	 */
-	@PutMapping("/rentals/{id}")
+	@PutMapping("/api/rentals/{id}")
 	public ResponseEntity<RentalResponse> updateRental(@PathVariable("id") final Integer id,
 			@Valid @RequestParam String name, @Valid @RequestParam int surface, @Valid @RequestParam int price,
 			@Valid @RequestParam String description) {

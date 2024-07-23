@@ -24,9 +24,9 @@ public class UserController {
 	 * @param ID of the user
 	 * @return - A User
 	 */
-	@GetMapping("/user/{id}")
 	public User getUser(@PathVariable("id") final Integer id) {
 		Optional<User> user = userService.getUserById(id);
+	@GetMapping("/api/user/{id}")
 		if (user.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
 		}

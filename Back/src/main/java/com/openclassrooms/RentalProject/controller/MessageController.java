@@ -23,7 +23,7 @@ public class MessageController {
 	 * @param message An object ResponseEntity<MessageResponse>
 	 * @return The ResponseEntity with a MessageResponse if succeeded
 	 */
-	@PostMapping("/messages")
+	@PostMapping("/api/messages")
 	public ResponseEntity<MessageResponse> createMessage(@RequestBody MessageRequest message) {
 
 		try {
