@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
  * Handles the end points related to the user.
  */
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
 
 	@Autowired
@@ -39,8 +40,8 @@ public class UserController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the user", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class)) }),
-			@ApiResponse(responseCode = "404", description = "User not found", content = @Content) })
-	@SecurityRequirement(name = "bearerAuth")
+			@ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
 	@GetMapping("/api/user/{id}")
 	public ResponseEntity<UserDto> getUser(@PathVariable("id") final Integer id) {
 		Optional<UserDto> user = userService.getUserDtoById(id);

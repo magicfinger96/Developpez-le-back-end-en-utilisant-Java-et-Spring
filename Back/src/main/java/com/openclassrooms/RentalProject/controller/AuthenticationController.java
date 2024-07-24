@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.RentalProject.DTO.AuthSuccessResponse;
 import com.openclassrooms.RentalProject.DTO.LoginRequest;
-import com.openclassrooms.RentalProject.DTO.MessageResponse;
 import com.openclassrooms.RentalProject.DTO.RegisterRequest;
 import com.openclassrooms.RentalProject.DTO.UserDto;
 import com.openclassrooms.RentalProject.service.AuthenticationService;
@@ -48,7 +47,7 @@ public class AuthenticationController {
 	@Operation(summary = "Log the user in")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Logged in the user", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessResponse.class)) }),
-			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content) })
+			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content)})
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<AuthSuccessResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
@@ -69,7 +68,7 @@ public class AuthenticationController {
 	@Operation(summary = "Register the user")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Registered the user", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessResponse.class)) }),
-			@ApiResponse(responseCode = "400", description = "Some input data are missing", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Input data are missing or not valid", content = @Content),
 			@ApiResponse(responseCode = "409", description = "The email is already registered", content = @Content) })
 	@PostMapping("/api/auth/register")
 	public ResponseEntity<AuthSuccessResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
@@ -92,8 +91,8 @@ public class AuthenticationController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the authenticated user", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class)), }),
-			@ApiResponse(responseCode = "401", description = "There is no authenticated user", content = @Content) })
-	@SecurityRequirement(name = "bearerAuth")
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content) })
+	@SecurityRequirement(name = "Bearer Authentication")
 	@GetMapping("/api/auth/me")
 	public ResponseEntity<UserDto> getMe() {
 

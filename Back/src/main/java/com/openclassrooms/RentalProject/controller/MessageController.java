@@ -23,6 +23,7 @@ import jakarta.validation.Valid;
  * Handles the end points related to the message.
  */
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 public class MessageController {
 
 	@Autowired
@@ -38,15 +39,16 @@ public class MessageController {
 	@Operation(summary = "Create a message")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Created the message", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
-			@ApiResponse(responseCode = "404", description = "User or rental, associated with the message, not found", content = @Content) })
-	@SecurityRequirement(name = "bearerAuth")
+			@ApiResponse(responseCode = "404", description = "User or rental, associated with the message, not found", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Input data are missing or not valid", content = @Content),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
 	@PostMapping("/api/messages")
 	public ResponseEntity<MessageResponse> createMessage(@Valid @RequestBody MessageRequest message) {
 		
 		try {
 			messageService.saveMessage(message);
 		} catch (Exception e) {
-			System.out.print("Error while creating a message: " + e);
+			System.out.println("Error while creating a message: " + e);
 			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
 		}
 

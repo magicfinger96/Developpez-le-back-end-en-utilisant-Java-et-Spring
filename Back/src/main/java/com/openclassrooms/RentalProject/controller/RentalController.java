@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +43,7 @@ import jakarta.validation.constraints.Positive;
  * Handles the end points related to the rental.
  */
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 public class RentalController {
 
 	@Autowired
@@ -57,8 +62,8 @@ public class RentalController {
 	 */
 	@Operation(summary = "Get all the rentals")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Found the rentals", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalsDto.class)) }) })
-	@SecurityRequirement(name = "bearerAuth")
+			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalsDto.class)) }),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
 	@GetMapping("/api/rentals")
 	public ResponseEntity<RentalsDto> getRentals() {
 		return ResponseEntity.ok(rentalService.getRentals());
@@ -75,8 +80,8 @@ public class RentalController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Found the rental", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = RentalDto.class)) }),
-			@ApiResponse(responseCode = "404", description = "The rental was not found", content = @Content) })
-	@SecurityRequirement(name = "bearerAuth")
+			@ApiResponse(responseCode = "404", description = "The rental was not found", content = @Content),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
 	@GetMapping("/api/rentals/{id}")
 	public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
 
@@ -102,10 +107,9 @@ public class RentalController {
 	@Operation(summary = "Create a rental")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Created the rental", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
-			@ApiResponse(responseCode = "400", description = "The picture provided is not png or jpeg", content = @Content),
-			@ApiResponse(responseCode = "401", description = "There is no authenticated user", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Input data are missing or not valid", content = @Content),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Couldn't upload the picture", content = @Content) })
-	@SecurityRequirement(name = "bearerAuth")
 	@RequestMapping(
 		    path = "/api/rentals", 
 		    method = RequestMethod.POST, 
@@ -174,8 +178,9 @@ public class RentalController {
 	@Operation(summary = "Update a rental")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Updated the rental", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
-			@ApiResponse(responseCode = "404", description = "The rental or the owner was not found", content = @Content) })
-	@SecurityRequirement(name = "bearerAuth")
+			@ApiResponse(responseCode = "404", description = "The rental or the owner was not found", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Input data are missing or not valid", content = @Content),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
 	@PutMapping("/api/rentals/{id}")
 	public ResponseEntity<MessageResponse> updateRental(
 			@PathVariable("id") final Integer id,
