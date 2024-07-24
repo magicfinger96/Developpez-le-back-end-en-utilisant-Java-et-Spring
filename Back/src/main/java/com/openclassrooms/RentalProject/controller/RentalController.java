@@ -32,6 +32,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 /**
  * Handles the end points related to the rental.
@@ -104,11 +106,16 @@ public class RentalController {
 			@ApiResponse(responseCode = "401", description = "There is no authenticated user", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Couldn't upload the picture", content = @Content) })
 	@SecurityRequirement(name = "bearerAuth")
-	@PostMapping("/api/rentals")
-	public ResponseEntity<MessageResponse> createRental(@Valid @RequestParam("name") String name,
-			@Valid @RequestParam("surface") int surface, @Valid @RequestParam("price") int price,
-			@Valid @RequestParam("picture") MultipartFile picture,
-			@Valid @RequestParam("description") String description) {
+	@RequestMapping(
+		    path = "/api/rentals", 
+		    method = RequestMethod.POST, 
+		    consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<MessageResponse> createRental(
+			@NotBlank @RequestParam("name") String name,
+			@Positive @RequestParam("surface") int surface,
+			@Positive @RequestParam("price") int price,
+			@Valid @RequestPart("picture") MultipartFile picture,
+			@NotBlank @RequestParam("description") String description) {
 
 		if (!picture.getContentType().equals("image/jpeg") && !picture.getContentType().equals("image/png")) {
 			return new ResponseEntity<MessageResponse>(HttpStatus.BAD_REQUEST);
@@ -170,9 +177,12 @@ public class RentalController {
 			@ApiResponse(responseCode = "404", description = "The rental or the owner was not found", content = @Content) })
 	@SecurityRequirement(name = "bearerAuth")
 	@PutMapping("/api/rentals/{id}")
-	public ResponseEntity<MessageResponse> updateRental(@PathVariable("id") final Integer id,
-			@Valid @RequestParam String name, @Valid @RequestParam int surface, @Valid @RequestParam int price,
-			@Valid @RequestParam String description) {
+	public ResponseEntity<MessageResponse> updateRental(
+			@PathVariable("id") final Integer id,
+			@NotBlank @RequestParam String name,
+			@Positive @RequestParam int surface,
+			@Positive @RequestParam int price,
+			@NotBlank @RequestParam String description) {
 
 		Optional<RentalDto> rentalToUpdate = rentalService.getRentalDtoById(id);
 

@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 /**
  * Handles the end points related to the user authentication.
@@ -49,7 +50,7 @@ public class AuthenticationController {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessResponse.class)) }),
 			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content) })
 	@PostMapping("/api/auth/login")
-	public ResponseEntity<AuthSuccessResponse> login(@RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<AuthSuccessResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			String token = authenticationService.login(loginRequest);
 			return ResponseEntity.ok(new AuthSuccessResponse(token));
@@ -71,16 +72,7 @@ public class AuthenticationController {
 			@ApiResponse(responseCode = "400", description = "Some input data are missing", content = @Content),
 			@ApiResponse(responseCode = "409", description = "The email is already registered", content = @Content) })
 	@PostMapping("/api/auth/register")
-	public ResponseEntity<AuthSuccessResponse> register(@RequestBody RegisterRequest registerRequest) {
-
-		String name = registerRequest.getName();
-		String email = registerRequest.getEmail();
-		String password = registerRequest.getPassword();
-
-		if (name == null || name.isBlank() || email == null || email.isBlank() || password == null
-				|| password.isBlank()) {
-			return new ResponseEntity<AuthSuccessResponse>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<AuthSuccessResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
 		if (userService.getUserByEmail(registerRequest.getEmail()) != null) {
 			return new ResponseEntity<AuthSuccessResponse>(HttpStatus.CONFLICT);

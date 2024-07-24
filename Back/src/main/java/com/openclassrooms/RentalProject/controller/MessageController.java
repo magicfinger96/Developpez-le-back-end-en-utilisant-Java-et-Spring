@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 /**
  * Handles the end points related to the message.
@@ -40,8 +41,8 @@ public class MessageController {
 			@ApiResponse(responseCode = "404", description = "User or rental, associated with the message, not found", content = @Content) })
 	@SecurityRequirement(name = "bearerAuth")
 	@PostMapping("/api/messages")
-	public ResponseEntity<MessageResponse> createMessage(@RequestBody MessageRequest message) {
-
+	public ResponseEntity<MessageResponse> createMessage(@Valid @RequestBody MessageRequest message) {
+		
 		try {
 			messageService.saveMessage(message);
 		} catch (Exception e) {
