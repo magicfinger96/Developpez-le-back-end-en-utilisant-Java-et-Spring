@@ -12,4 +12,7 @@
 - Then execute `npm run start` to run the front project
 
 ## Run the back:
--
+- TODO
+
+## Swagger documentation:
+http://localhost:3001/swagger-ui/index.html
