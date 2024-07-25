@@ -12,7 +12,11 @@
 - Then execute `npm run start` to run the front project
 
 ## Run the back:
-- TODO
+- Past your keys inside `Back\src\main\resources\application.properties`
+- Open a terminal inside `Back` folder
+- Execute `mvn spring-boot:run` (If `mvn` is not recognized, follow instructions [here](https://www.baeldung.com/install-maven-on-windows-linux-mac))
+
+You are now ready to go!
 
 ## Swagger documentation:
 http://localhost:3001/swagger-ui/index.html
