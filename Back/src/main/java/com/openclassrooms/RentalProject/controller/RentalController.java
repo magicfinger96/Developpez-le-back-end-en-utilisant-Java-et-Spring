@@ -36,8 +36,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 /**
  * Handles the end points related to the rental.
@@ -115,16 +117,16 @@ public class RentalController {
 		    method = RequestMethod.POST, 
 		    consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<MessageResponse> createRental(
-			@NotBlank @RequestParam("name") String name,
-			@Positive @RequestParam("surface") int surface,
-			@Positive @RequestParam("price") int price,
+			@Size(max = 60) @NotBlank @RequestParam("name") String name,
+			@DecimalMax(value = "100000000000") @Positive @RequestParam("surface") int surface,
+			@DecimalMax(value = "100000000000") @Positive @RequestParam("price") int price,
 			@Valid @RequestPart("picture") MultipartFile picture,
-			@NotBlank @RequestParam("description") String description) {
+			@Size(max = 400) @NotBlank @RequestParam("description") String description) {
 
 		if (!picture.getContentType().equals("image/jpeg") && !picture.getContentType().equals("image/png")) {
 			return new ResponseEntity<MessageResponse>(HttpStatus.BAD_REQUEST);
 		}
-
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) {
 			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
@@ -184,10 +186,10 @@ public class RentalController {
 	@PutMapping("/api/rentals/{id}")
 	public ResponseEntity<MessageResponse> updateRental(
 			@PathVariable("id") final Integer id,
-			@NotBlank @RequestParam String name,
-			@Positive @RequestParam int surface,
-			@Positive @RequestParam int price,
-			@NotBlank @RequestParam String description) {
+			@Size(max = 60) @NotBlank @RequestParam String name,
+			@DecimalMax(value = "100000000000") @Positive @RequestParam int surface,
+			@DecimalMax(value = "100000000000") @Positive @RequestParam int price,
+			@Size(max = 400) @NotBlank @RequestParam String description) {
 
 		Optional<RentalDto> rentalToUpdate = rentalService.getRentalDtoById(id);
 
