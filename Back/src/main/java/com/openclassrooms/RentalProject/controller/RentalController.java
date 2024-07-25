@@ -111,6 +111,7 @@ public class RentalController {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "Input data are missing or not valid", content = @Content),
 			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content),
+			@ApiResponse(responseCode = "413", description = "The picture is too large.", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Couldn't upload the picture", content = @Content) })
 	@RequestMapping(
 		    path = "/api/rentals", 
