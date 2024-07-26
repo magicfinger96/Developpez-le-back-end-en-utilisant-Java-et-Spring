@@ -20,3 +20,6 @@ You are now ready to go!
 
 ## Swagger documentation:
 http://localhost:3001/swagger-ui/index.html
+
+## Image upload
+We use Amazon S3 to store the images. 
