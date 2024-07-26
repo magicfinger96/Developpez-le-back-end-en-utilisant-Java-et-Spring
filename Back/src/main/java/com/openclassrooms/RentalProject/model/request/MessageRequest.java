@@ -1,4 +1,4 @@
-package com.openclassrooms.RentalProject.DTO;
+package com.openclassrooms.RentalProject.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

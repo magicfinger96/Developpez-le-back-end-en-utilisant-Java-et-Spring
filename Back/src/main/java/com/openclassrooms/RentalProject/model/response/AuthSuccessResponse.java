@@ -1,4 +1,4 @@
-package com.openclassrooms.RentalProject.DTO;
+package com.openclassrooms.RentalProject.model.response;
 
 import lombok.Data;
 

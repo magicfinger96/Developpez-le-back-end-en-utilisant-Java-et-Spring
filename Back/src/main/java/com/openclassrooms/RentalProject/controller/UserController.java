@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.model.dto.UserDto;
 import com.openclassrooms.RentalProject.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;

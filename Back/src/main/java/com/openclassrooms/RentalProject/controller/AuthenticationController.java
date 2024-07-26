@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.RentalProject.DTO.AuthSuccessResponse;
-import com.openclassrooms.RentalProject.DTO.LoginRequest;
-import com.openclassrooms.RentalProject.DTO.RegisterRequest;
-import com.openclassrooms.RentalProject.DTO.UserDto;
+import com.openclassrooms.RentalProject.model.dto.UserDto;
+import com.openclassrooms.RentalProject.model.request.LoginRequest;
+import com.openclassrooms.RentalProject.model.request.RegisterRequest;
+import com.openclassrooms.RentalProject.model.response.AuthSuccessResponse;
 import com.openclassrooms.RentalProject.service.AuthenticationService;
 import com.openclassrooms.RentalProject.service.UserService;
 

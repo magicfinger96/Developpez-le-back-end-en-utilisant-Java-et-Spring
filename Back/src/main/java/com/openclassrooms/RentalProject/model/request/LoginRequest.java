@@ -1,23 +1,17 @@
-package com.openclassrooms.RentalProject.DTO;
+package com.openclassrooms.RentalProject.model.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * Represents a register request.
+ * Represents the request to Log in.
  */
 @Data
-public class RegisterRequest {
+public class LoginRequest {
 
-	@Email
 	@NotBlank(message = "The email is required and can't be empty.")
 	private String email;
 
-	@NotBlank(message = "The name is required and can't be empty.")
-	private String name;
-
 	@NotBlank(message = "The password is required and can't be empty.")
 	private String password;
-
 }

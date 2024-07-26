@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.RentalProject.DTO.LoginRequest;
-import com.openclassrooms.RentalProject.DTO.RegisterRequest;
-import com.openclassrooms.RentalProject.model.User;
+import com.openclassrooms.RentalProject.model.entity.User;
+import com.openclassrooms.RentalProject.model.request.LoginRequest;
+import com.openclassrooms.RentalProject.model.request.RegisterRequest;
 
 /**
  * Service which handles the authentication logic.

@@ -7,10 +7,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.RentalProject.DTO.RentalsDto;
-import com.openclassrooms.RentalProject.DTO.RentalDto;
-import com.openclassrooms.RentalProject.model.Rental;
-import com.openclassrooms.RentalProject.model.User;
+import com.openclassrooms.RentalProject.model.dto.RentalDto;
+import com.openclassrooms.RentalProject.model.dto.RentalsDto;
+import com.openclassrooms.RentalProject.model.entity.Rental;
+import com.openclassrooms.RentalProject.model.entity.User;
 import com.openclassrooms.RentalProject.repository.RentalRepository;
 
 /**

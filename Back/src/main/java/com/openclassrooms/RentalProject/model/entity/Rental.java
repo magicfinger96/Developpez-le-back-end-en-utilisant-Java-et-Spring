@@ -1,4 +1,4 @@
-package com.openclassrooms.RentalProject.model;
+package com.openclassrooms.RentalProject.model.entity;
 
 import java.util.Date;
 
@@ -10,25 +10,33 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 /**
- * Entity of a user.
+ * Entity of a rental.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "rental")
 @Data
-public class User {
+public class Rental {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 
-	private String email;
 	private String name;
-	private String password;
+	private float surface;
+	private float price;
+	private String picture;
+	private String description;
+
+	@OneToOne
+	@JoinColumn(name = "owner_id")
+	private User owner;
 
 	@CreationTimestamp
 	@Column(name = "created_at")

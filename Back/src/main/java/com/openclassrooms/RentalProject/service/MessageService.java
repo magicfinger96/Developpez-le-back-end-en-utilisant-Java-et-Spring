@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.RentalProject.DTO.MessageRequest;
-import com.openclassrooms.RentalProject.model.Message;
-import com.openclassrooms.RentalProject.model.Rental;
-import com.openclassrooms.RentalProject.model.User;
+import com.openclassrooms.RentalProject.model.entity.Message;
+import com.openclassrooms.RentalProject.model.entity.Rental;
+import com.openclassrooms.RentalProject.model.entity.User;
+import com.openclassrooms.RentalProject.model.request.MessageRequest;
 import com.openclassrooms.RentalProject.repository.MessageRepository;
 
 /**

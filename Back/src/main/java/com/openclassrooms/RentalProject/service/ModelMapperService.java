@@ -3,10 +3,10 @@ package com.openclassrooms.RentalProject.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.RentalProject.DTO.RentalDto;
-import com.openclassrooms.RentalProject.DTO.UserDto;
-import com.openclassrooms.RentalProject.model.Rental;
-import com.openclassrooms.RentalProject.model.User;
+import com.openclassrooms.RentalProject.model.dto.RentalDto;
+import com.openclassrooms.RentalProject.model.dto.UserDto;
+import com.openclassrooms.RentalProject.model.entity.Rental;
+import com.openclassrooms.RentalProject.model.entity.User;
 
 /**
  * Service which handles the ModelMapper.

@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.RentalProject.model.User;
+import com.openclassrooms.RentalProject.model.entity.User;
 import com.openclassrooms.RentalProject.repository.UserRepository;
 
 /**
