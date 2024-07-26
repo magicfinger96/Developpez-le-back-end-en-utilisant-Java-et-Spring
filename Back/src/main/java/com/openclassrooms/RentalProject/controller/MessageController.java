@@ -31,7 +31,7 @@ public class MessageController {
 
 	/**
 	 * Create - Add a new message.
-	 * 
+	 *
 	 * @param message The message to save.
 	 * @return a ResponseEntity containing a MessageResponse if it succeeded,
 	 *         otherwise returns an error ResponseEntity.
@@ -41,15 +41,15 @@ public class MessageController {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "404", description = "User or rental, associated with the message, not found", content = @Content),
 			@ApiResponse(responseCode = "400", description = "Input data are missing or not valid", content = @Content),
-			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content) })
 	@PostMapping("/api/messages")
 	public ResponseEntity<MessageResponse> createMessage(@Valid @RequestBody MessageRequest message) {
-		
+
 		try {
 			messageService.saveMessage(message);
 		} catch (Exception e) {
 			System.out.println("Error while creating a message: " + e);
-			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		MessageResponse response = new MessageResponse("Message send with success");

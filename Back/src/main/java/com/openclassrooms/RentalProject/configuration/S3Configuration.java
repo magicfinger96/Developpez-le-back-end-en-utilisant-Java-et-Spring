@@ -15,23 +15,21 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
  */
 @Configuration
 public class S3Configuration {
-	
+
 	@Value("${aws.access.key}")
-    private String awsAccessKey;
+	private String awsAccessKey;
 
-    @Value("${aws.secret.key}")
-    private String awsSecretKey;    
+	@Value("${aws.secret.key}")
+	private String awsSecretKey;
 
-    @Bean
-    public AmazonS3 s3client() {
+	@Bean
+	public AmazonS3 s3client() {
 
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-        var awsS3Config = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .withRegion(Regions.EU_NORTH_1)
-                .build();
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+		var awsS3Config = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+				.withRegion(Regions.EU_NORTH_1).build();
 
-        return awsS3Config;
-    }
+		return awsS3Config;
+	}
 
 }

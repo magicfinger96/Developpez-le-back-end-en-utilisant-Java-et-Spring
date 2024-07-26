@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,13 +58,14 @@ public class RentalController {
 
 	/***
 	 * End point that provides all the rentals.
-	 * 
+	 *
 	 * @return a ResponseEntity containing the rentals.
 	 */
 	@Operation(summary = "Get all the rentals")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Found the rentals", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = RentalsDto.class)) }),
-			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Found the rentals", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = RentalsDto.class)) }),
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content) })
 	@GetMapping("/api/rentals")
 	public ResponseEntity<RentalsDto> getRentals() {
 		return ResponseEntity.ok(rentalService.getRentals());
@@ -73,7 +73,7 @@ public class RentalController {
 
 	/**
 	 * End point that provides a rental.
-	 * 
+	 *
 	 * @param id id of the rental.
 	 * @return a ResponseEntity containing the rental if the call succeeded.
 	 *         Otherwise, returns a error ResponseEntity.
@@ -83,7 +83,7 @@ public class RentalController {
 			@ApiResponse(responseCode = "200", description = "Found the rental", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = RentalDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "The rental was not found", content = @Content),
-			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content) })
 	@GetMapping("/api/rentals/{id}")
 	public ResponseEntity<RentalDto> getRental(@PathVariable("id") final Integer id) {
 
@@ -92,12 +92,12 @@ public class RentalController {
 		if (rentalDto.isPresent()) {
 			return ResponseEntity.ok(rentalDto.get());
 		}
-		return new ResponseEntity<RentalDto>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	/**
 	 * End point that creates a rental.
-	 * 
+	 *
 	 * @param name        name of the rental.
 	 * @param surface     surface of the rental.
 	 * @param price       price of the rental.
@@ -113,29 +113,25 @@ public class RentalController {
 			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content),
 			@ApiResponse(responseCode = "413", description = "The picture is too large.", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Couldn't upload the picture", content = @Content) })
-	@RequestMapping(
-		    path = "/api/rentals", 
-		    method = RequestMethod.POST, 
-		    consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<MessageResponse> createRental(
-			@Size(max = 60) @NotBlank @RequestParam("name") String name,
+	@RequestMapping(path = "/api/rentals", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<MessageResponse> createRental(@Size(max = 60) @NotBlank @RequestParam("name") String name,
 			@DecimalMax(value = "100000000000") @Positive @RequestParam("surface") int surface,
 			@DecimalMax(value = "100000000000") @Positive @RequestParam("price") int price,
 			@Valid @RequestPart("picture") MultipartFile picture,
 			@Size(max = 400) @NotBlank @RequestParam("description") String description) {
 
 		if (!picture.getContentType().equals("image/jpeg") && !picture.getContentType().equals("image/png")) {
-			return new ResponseEntity<MessageResponse>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) {
-			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
 		UserDto user = userService.getUserByEmail(authentication.getName());
 		if (user == null) {
-			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
 		RentalDto rentalDto = new RentalDto();
@@ -150,7 +146,7 @@ public class RentalController {
 			picturePath = imageService.uploadFile(picture);
 		} catch (IOException e) {
 			System.out.println("Error while uploading the file: " + e);
-			return new ResponseEntity<MessageResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		rentalDto.setPicture(picturePath);
@@ -159,7 +155,7 @@ public class RentalController {
 			rentalService.saveRental(rentalDto);
 		} catch (Exception e) {
 			System.out.println("Error while saving the rental: " + e);
-			return new ResponseEntity<MessageResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
 		MessageResponse response = new MessageResponse("Rental created !");
@@ -169,7 +165,7 @@ public class RentalController {
 
 	/**
 	 * End point that updates a rental.
-	 * 
+	 *
 	 * @param id          id of the rental.
 	 * @param name        updated name of the rental.
 	 * @param surface     updated surface of the rental.
@@ -183,10 +179,9 @@ public class RentalController {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)) }),
 			@ApiResponse(responseCode = "404", description = "The rental or the owner was not found", content = @Content),
 			@ApiResponse(responseCode = "400", description = "Input data are missing or not valid", content = @Content),
-			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content) })
 	@PutMapping("/api/rentals/{id}")
-	public ResponseEntity<MessageResponse> updateRental(
-			@PathVariable("id") final Integer id,
+	public ResponseEntity<MessageResponse> updateRental(@PathVariable("id") final Integer id,
 			@Size(max = 60) @NotBlank @RequestParam String name,
 			@DecimalMax(value = "100000000000") @Positive @RequestParam int surface,
 			@DecimalMax(value = "100000000000") @Positive @RequestParam int price,
@@ -195,7 +190,7 @@ public class RentalController {
 		Optional<RentalDto> rentalToUpdate = rentalService.getRentalDtoById(id);
 
 		if (rentalToUpdate.isEmpty()) {
-			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		RentalDto rentalToSave = rentalToUpdate.get();
@@ -209,7 +204,7 @@ public class RentalController {
 			rentalService.saveRental(rentalToSave);
 		} catch (Exception e) {
 			System.out.println("Failed to save the rental: " + e);
-			return new ResponseEntity<MessageResponse>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		MessageResponse response = new MessageResponse("Rental updated !");

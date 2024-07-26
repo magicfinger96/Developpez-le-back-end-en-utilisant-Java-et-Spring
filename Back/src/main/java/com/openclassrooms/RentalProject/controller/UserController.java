@@ -31,7 +31,7 @@ public class UserController {
 
 	/**
 	 * Read - Get a user with given ID.
-	 * 
+	 *
 	 * @param id the id of the user.
 	 * @return a ResponseEntity containing the UserDto if the call succeeded,
 	 *         otherwise returns an error ResponseEntity.
@@ -41,12 +41,12 @@ public class UserController {
 			@ApiResponse(responseCode = "200", description = "Found the user", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "User not found", content = @Content),
-			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content)})
+			@ApiResponse(responseCode = "401", description = "JWT is wrong or missing", content = @Content) })
 	@GetMapping("/api/user/{id}")
 	public ResponseEntity<UserDto> getUser(@PathVariable("id") final Integer id) {
 		Optional<UserDto> user = userService.getUserDtoById(id);
 		if (user.isEmpty()) {
-			return new ResponseEntity<UserDto>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return ResponseEntity.ok(user.get());
 	}

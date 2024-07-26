@@ -39,7 +39,7 @@ public class AuthenticationController {
 
 	/**
 	 * End point logging the user in.
-	 * 
+	 *
 	 * @param loginDto credentials used to log in.
 	 * @return a ResponseEntity containing the jwt token if succeeded. Otherwise an
 	 *         error ResponseEntity.
@@ -47,20 +47,20 @@ public class AuthenticationController {
 	@Operation(summary = "Log the user in")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Logged in the user", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AuthSuccessResponse.class)) }),
-			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content)})
+			@ApiResponse(responseCode = "401", description = "The credentials are wrong", content = @Content) })
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<AuthSuccessResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			String token = authenticationService.login(loginRequest);
 			return ResponseEntity.ok(new AuthSuccessResponse(token));
 		} catch (Exception exception) {
-			return new ResponseEntity<AuthSuccessResponse>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}
 
 	/**
 	 * End point registering a user.
-	 * 
+	 *
 	 * @param registerDto the data used to create a new user.
 	 * @return a ResponseEntity containing the jwt token if succeeded. Otherwise an
 	 *         error ResponseEntity.
@@ -74,7 +74,7 @@ public class AuthenticationController {
 	public ResponseEntity<AuthSuccessResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
 		if (userService.getUserByEmail(registerRequest.getEmail()) != null) {
-			return new ResponseEntity<AuthSuccessResponse>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 
 		String token = authenticationService.register(registerRequest);
@@ -83,7 +83,7 @@ public class AuthenticationController {
 
 	/**
 	 * End point that returns the authenticated user.
-	 * 
+	 *
 	 * @return a ResponseEntity containing the user. Otherwise, returns a error
 	 *         ResponseEntity.
 	 */
@@ -99,7 +99,7 @@ public class AuthenticationController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null || !authentication.isAuthenticated()) {
-			return new ResponseEntity<UserDto>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
 		String email = authentication.getName();

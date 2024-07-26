@@ -30,7 +30,7 @@ public class RentalService {
 
 	/**
 	 * Get all the rentals.
-	 * 
+	 *
 	 * @return the rentals.
 	 */
 	public RentalsDto getRentals() {
@@ -46,7 +46,7 @@ public class RentalService {
 
 	/**
 	 * Get a rental DTO.
-	 * 
+	 *
 	 * @param id id of the fetched rental.
 	 * @return a RentalDto
 	 */
@@ -62,7 +62,7 @@ public class RentalService {
 
 	/**
 	 * Get a rental.
-	 * 
+	 *
 	 * @param id id of the rental.
 	 * @return a rental.
 	 */
@@ -72,7 +72,7 @@ public class RentalService {
 
 	/**
 	 * Save a rental.
-	 * 
+	 *
 	 * @param rentalDto dto of the rental to save.
 	 * @throws Exception thrown if the owner is not found.
 	 */

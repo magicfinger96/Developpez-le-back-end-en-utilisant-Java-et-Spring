@@ -25,8 +25,8 @@ public class JWTService {
 
 	/**
 	 * Generates a token with RS256 algorithm which last 1 day.
-	 * 
-	 * @param userDetails its user name is used to generate the token. 
+	 *
+	 * @param userDetails its user name is used to generate the token.
 	 * @return the token.
 	 */
 	public String generateToken(UserDetails userDetails) {

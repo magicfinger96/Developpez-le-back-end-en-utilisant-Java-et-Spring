@@ -33,7 +33,7 @@ public class AuthenticationService {
 
 	/**
 	 * Save a new user in the DDB. Encodes the password before.
-	 * 
+	 *
 	 * @param registerRequest contains user data to save.
 	 * @return the generated JWT.
 	 */
@@ -50,7 +50,7 @@ public class AuthenticationService {
 
 	/**
 	 * Check if the credentials are valid.
-	 * 
+	 *
 	 * @param loginDto contains credentials.
 	 * @return the generated JWT.
 	 * @throws Exception if the user details is null.
@@ -58,11 +58,7 @@ public class AuthenticationService {
 	public String login(LoginRequest loginRequest) throws Exception {
 
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginRequest.getEmail());
-		if (userDetails == null) {
-			throw new Exception();
-		}
-
-		if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
+		if ((userDetails == null) || !passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
 			throw new Exception();
 		}
 		return jwtService.generateToken(userDetails);

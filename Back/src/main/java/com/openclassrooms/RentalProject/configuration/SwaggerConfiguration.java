@@ -23,7 +23,8 @@ public class SwaggerConfiguration {
 	}
 
 	private SecurityScheme createAPIKeyScheme() {
-		return new SecurityScheme().name("Bearer Authentication").type(SecurityScheme.Type.HTTP).bearerFormat("JWT").scheme("bearer");
+		return new SecurityScheme().name("Bearer Authentication").type(SecurityScheme.Type.HTTP).bearerFormat("JWT")
+				.scheme("bearer");
 	}
 
 }

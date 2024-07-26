@@ -18,13 +18,13 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
 
 	/**
 	 * Save the user.
-	 * 
+	 *
 	 * @param user user to be saved.
 	 * @return the new saved user.
 	 */
@@ -34,32 +34,32 @@ public class UserService {
 
 	/**
 	 * Get a User.
-	 * 
+	 *
 	 * @param id id of the user fetched.
 	 * @return the user.
 	 */
 	public Optional<User> getUserById(Integer id) {
 		return userRepository.findById(id);
 	}
-	
+
 	/**
 	 * Get the DTO of a User.
-	 * 
+	 *
 	 * @param email email of the user fetched.
 	 * @return a UserDto.
 	 */
 	public UserDto getUserByEmail(String email) {
 		User user = userRepository.findByEmail(email);
-		
-		if(user == null) {
+
+		if (user == null) {
 			return null;
 		}
 		return modelMapper.map(user, UserDto.class);
 	}
-	
+
 	/**
 	 * Get the DTO of a User.
-	 * 
+	 *
 	 * @param id id of the user fetched.
 	 * @return a UserDto.
 	 */

@@ -32,11 +32,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	/**
 	 * Returns the granted authorities.
+	 *
 	 * @param role role we want to add inside the authorities.
 	 * @return a list of GrantedAuthority with only one authority.
 	 */
 	private List<GrantedAuthority> getGrantedAuthorities(String role) {
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
 		return authorities;
 	}

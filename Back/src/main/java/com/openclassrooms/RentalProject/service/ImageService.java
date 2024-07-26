@@ -25,10 +25,10 @@ public class ImageService {
 	public ImageService(AmazonS3 s3client) {
 		this.s3client = s3client;
 	}
-	
+
 	/**
 	 * Upload a file on AmazonS3 server.
-	 * 
+	 *
 	 * @param file file to upload.
 	 * @return the URL where is stored the uploaded image.
 	 * @throws IOException if the file can't be read.

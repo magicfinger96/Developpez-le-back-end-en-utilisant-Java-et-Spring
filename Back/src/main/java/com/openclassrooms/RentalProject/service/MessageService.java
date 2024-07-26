@@ -28,7 +28,7 @@ public class MessageService {
 
 	/**
 	 * Save a message.
-	 * 
+	 *
 	 * @param messageRequest data of the message.
 	 * @throws Exception when the user or rental associated to the message are not
 	 *                   found.

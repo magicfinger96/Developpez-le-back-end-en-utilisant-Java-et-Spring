@@ -103,7 +103,7 @@ public class SpringSecurityConfig {
 
 	/**
 	 * Create a RSAPrivateKey and store it inside the privateKey attribute.
-	 * 
+	 *
 	 * @param key the key as a String.
 	 */
 	private void createPrivateKey(String key) {
@@ -119,7 +119,7 @@ public class SpringSecurityConfig {
 
 	/**
 	 * Create a RSAPublicKey and store it inside the publicKey attribute.
-	 * 
+	 *
 	 * @param key the key as a String.
 	 */
 	private void createPublicKey(String key) {
