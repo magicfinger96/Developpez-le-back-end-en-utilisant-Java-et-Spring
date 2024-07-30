@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.openclassrooms.RentalProject.model.dto.MessageResponse;
 import com.openclassrooms.RentalProject.model.dto.RentalDto;
 import com.openclassrooms.RentalProject.model.dto.RentalsDto;
 import com.openclassrooms.RentalProject.model.dto.UserDto;
+import com.openclassrooms.RentalProject.model.response.MessageResponse;
 import com.openclassrooms.RentalProject.service.ImageService;
 import com.openclassrooms.RentalProject.service.RentalService;
 import com.openclassrooms.RentalProject.service.UserService;
